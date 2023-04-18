@@ -1,17 +1,29 @@
 package com.team.puddy.domain;
 
+import com.team.puddy.domain.answer.domain.Answer;
+import com.team.puddy.domain.answer.dto.RequestAnswerDto;
+import com.team.puddy.domain.answer.dto.request.UpdateAnswerDto;
+import com.team.puddy.domain.article.domain.Article;
+import com.team.puddy.domain.article.dto.request.RequestArticleDto;
+import com.team.puddy.domain.article.dto.request.UpdateArticleDto;
+import com.team.puddy.domain.article.dto.response.ResponseArticleDto;
 import com.team.puddy.domain.expert.domain.Expert;
 import com.team.puddy.domain.expert.dto.RequestExpertDto;
+import com.team.puddy.domain.expert.dto.ResponseExpertDto;
 import com.team.puddy.domain.pet.domain.Pet;
 import com.team.puddy.domain.pet.dto.request.RequestPetDto;
 import com.team.puddy.domain.question.domain.Question;
 import com.team.puddy.domain.question.dto.request.RequestQuestionDto;
 import com.team.puddy.domain.question.dto.response.QuestionResponseDto;
 import com.team.puddy.domain.question.dto.response.ResponseQuestionExcludeAnswerDto;
+import com.team.puddy.domain.review.domain.Review;
+import com.team.puddy.domain.review.dto.RequestReviewDto;
+import com.team.puddy.domain.review.dto.ResponseReviewDto;
 import com.team.puddy.domain.type.Category;
 import com.team.puddy.domain.type.UserRole;
 import com.team.puddy.domain.user.domain.User;
 import com.team.puddy.domain.user.dto.request.RegisterUserRequest;
+import com.team.puddy.global.config.auth.JwtUserDetails;
 import org.springframework.data.domain.*;
 
 import java.util.List;
@@ -105,6 +117,7 @@ public class TestEntityUtils {
                 .education("테스트대학교")
                 .introduce("저는 테스트입니다.")
                 .location("테스트시 테스트동")
+                .user(user())
                 .careerList(List.of("테스트 대학원 석사", "테스트 대학교 수의학과 학사")).build();
     }
 
@@ -138,5 +151,112 @@ public class TestEntityUtils {
                 .isSolved(true)
                 .postCategory(2)
                 .viewCount(2L).build();
+    }
+
+    public static Article article() {
+
+        return Article.builder()
+                .id(1L)
+                .title("title")
+                .content("content")
+                .user(user())
+                .build();
+
+    }
+
+    public static ResponseArticleDto responseArticleDto() {
+        return ResponseArticleDto.builder()
+                .articleId(1L)
+                .title("title")
+                .content("content")
+                .nickname("nickname")
+                .build();
+    }
+
+    public static UpdateArticleDto updateArticleDto() {
+        return UpdateArticleDto.builder()
+                .title("title")
+                .content("content")
+                .tagList(List.of("tag1", "tag2"))
+                .build();
+    }
+
+    public static RequestArticleDto requestArticleDto() {
+        return RequestArticleDto.builder()
+                .title("title")
+                .content("content")
+                .tagList(List.of("tag1", "tag2"))
+                .build();
+    }
+
+    public static JwtUserDetails jwtUserDetails() {
+        return JwtUserDetails.builder()
+                .id(1L)
+                .isAuthenticated(true)
+                .role(UserRole.USER.getRole()).build();
+
+    }
+
+    public static RegisterUserRequest registerUserRequest() {
+        return RegisterUserRequest.builder()
+                .account("account")
+                .username("username")
+                .email("email")
+                .isNotificated(true)
+                .password("password")
+                .build();
+    }
+
+    public static Answer answer() {
+        return Answer.builder()
+                .id(1L)
+                .content("content")
+                .question(question(user()))
+                .user(user())
+                .build();
+    }
+
+    public static Review review() {
+        return Review.builder()
+                .id(1L)
+                .content("content")
+                .expert(expert())
+                .build();
+    }
+
+    public static RequestReviewDto requestReviewDto() {
+        return RequestReviewDto.builder()
+                .content("content")
+                .build();
+    }
+
+    public static ResponseReviewDto responseReviewDto() {
+        return ResponseReviewDto.builder()
+                .content("content")
+                .build();
+    }
+
+    public static ResponseExpertDto responseExpertDto() {
+        return ResponseExpertDto.builder()
+                .education("education")
+                .introduce("introduce")
+                .location("location")
+                .imagePath("")
+                .careerList(List.of("career1", "career2"))
+                .build();
+    }
+
+    public static RequestAnswerDto requestAnswerDto() {
+        return RequestAnswerDto.builder()
+                .content("content")
+                .postCategory(1)
+                .build();
+    }
+
+    public static UpdateAnswerDto updateAnswerDto() {
+        return UpdateAnswerDto.builder()
+                .content("수정 내용")
+                .build();
+
     }
 }

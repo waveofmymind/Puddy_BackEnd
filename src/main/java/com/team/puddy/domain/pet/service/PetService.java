@@ -1,15 +1,11 @@
 package com.team.puddy.domain.pet.service;
 
-import com.team.puddy.domain.image.domain.Image;
 import com.team.puddy.domain.image.service.ImageService;
 import com.team.puddy.domain.pet.domain.Pet;
 import com.team.puddy.domain.pet.dto.request.RequestPetDto;
 import com.team.puddy.domain.pet.dto.request.UpdatePetDto;
 import com.team.puddy.domain.pet.dto.response.ResponsePetDto;
-import com.team.puddy.domain.pet.repository.PetQueryRepository;
-import com.team.puddy.domain.pet.repository.PetRepository;
 import com.team.puddy.domain.user.domain.User;
-import com.team.puddy.domain.user.repository.UserQueryRepository;
 import com.team.puddy.domain.user.repository.UserRepository;
 import com.team.puddy.global.error.ErrorCode;
 import com.team.puddy.global.error.exception.NotFoundException;
@@ -29,12 +25,12 @@ import java.util.Optional;
 @Slf4j
 public class PetService {
 
-    private final UserQueryRepository userQueryRepository;
+    private final UserRepository userRepository;
     private final ImageService imageService;
     private final PetMapper petMapper;
 
     public void addPet(Long userId, MultipartFile file, RequestPetDto request) throws IOException {
-        User findUser = userQueryRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
+        User findUser = userRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
         Pet pet = petMapper.toEntity(request);
 
         imageService.saveImagePet(pet,file);
@@ -44,7 +40,7 @@ public class PetService {
 
     @Transactional(readOnly = true)
     public ResponsePetDto getPetByUserId(Long userId) {
-        User findUser = userQueryRepository.findByIdWithPet(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
+        User findUser = userRepository.findByIdWithPet(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
         Pet findPet = Optional.ofNullable(findUser.getPet()).orElseThrow(() -> new NotFoundException(ErrorCode.PET_NOT_FOUND));
 
         if (findPet.getImage() == null) {
@@ -55,7 +51,7 @@ public class PetService {
 
     @Transactional
     public void updatePet(UpdatePetDto updateDto, Long userId, MultipartFile file) throws IOException {
-        Pet findPet = userQueryRepository.findByIdWithPet(userId).orElseThrow(() -> new NotFoundException(ErrorCode.PET_NOT_FOUND))
+        Pet findPet = userRepository.findByIdWithPet(userId).orElseThrow(() -> new NotFoundException(ErrorCode.PET_NOT_FOUND))
                 .getPet();
 
         imageService.updateImagePet(findPet,file);

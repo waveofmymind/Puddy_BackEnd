@@ -5,10 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ExpertRepository extends JpaRepository<Expert, Long> {
+public interface ExpertRepository extends JpaRepository<Expert, Long>, ExpertQueryRepository{
 
-//    boolean existsByUserId(Long id);
 
-    List<Expert> findTop5ByOrderByCreatedDateDesc();
 
 }

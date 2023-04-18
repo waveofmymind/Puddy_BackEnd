@@ -28,6 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
+@DisplayName("질문글 서비스 테스트")
 @ExtendWith(MockitoExtension.class)
 public class QuestionServiceTest {
 

@@ -1,4 +1,4 @@
-package com.team.puddy.domain.review.repository;
+package com.team.puddy.domain.review.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.team.puddy.domain.review.domain.Review;
@@ -11,7 +11,7 @@ import static com.team.puddy.domain.review.domain.QReview.review;
 
 @Repository
 @RequiredArgsConstructor
-public class ReviewQueryRepository {
+public class ReviewQueryRepositoryImpl implements ReviewQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 

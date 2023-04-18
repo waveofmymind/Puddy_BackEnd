@@ -17,6 +17,7 @@ import com.team.puddy.domain.image.domain.Image;
 import com.team.puddy.domain.image.service.ImageService;
 import com.team.puddy.domain.user.domain.User;
 import com.team.puddy.domain.user.repository.UserQueryRepository;
+import com.team.puddy.domain.user.repository.UserRepository;
 import com.team.puddy.global.error.ErrorCode;
 import com.team.puddy.global.error.exception.NotFoundException;
 import com.team.puddy.global.mapper.ArticleMapper;
@@ -37,7 +38,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ArticleService {
 
-    private final UserQueryRepository userQueryRepository;
+    private final UserRepository userRepository;
     private final ArticleRepository articleRepository;
     private final ArticleMapper articleMapper;
     private final CommentMapper commentMapper;
@@ -49,7 +50,7 @@ public class ArticleService {
     @Transactional
     public void addArticle(RequestArticleDto requestDto, List<MultipartFile> images, Long userId) {
         //작성 유저 찾기
-        User findUser = userQueryRepository.findByUserId(userId).orElseThrow(
+        User findUser = userRepository.findByUserId(userId).orElseThrow(
                 () -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
         //이미지 저장하기
         List<Image> imageList = imageService.saveImageListToArticle(images);

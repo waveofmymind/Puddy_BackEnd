@@ -2,7 +2,8 @@ package com.team.puddy.domain.user.service;
 
 import com.team.puddy.domain.answer.domain.Answer;
 import com.team.puddy.domain.answer.dto.ResponseAnswerDtoExcludeUser;
-import com.team.puddy.domain.answer.repository.AnswerQueryRepository;
+import com.team.puddy.domain.answer.repository.AnswerRepository;
+import com.team.puddy.domain.answer.repository.querydsl.AnswerQueryRepository;
 import com.team.puddy.domain.image.domain.Image;
 import com.team.puddy.domain.image.service.ImageService;
 import com.team.puddy.domain.question.domain.Question;
@@ -15,7 +16,6 @@ import com.team.puddy.domain.user.dto.request.RegisterUserRequest;
 import com.team.puddy.domain.user.dto.response.ResponsePostDto;
 import com.team.puddy.domain.user.dto.response.ResponseUserInfoDto;
 import com.team.puddy.domain.user.dto.response.TokenReissueDto;
-import com.team.puddy.domain.user.repository.UserQueryRepository;
 import com.team.puddy.domain.user.repository.UserRepository;
 import com.team.puddy.global.config.security.jwt.JwtVerifier;
 import com.team.puddy.global.error.ErrorCode;
@@ -46,9 +46,8 @@ import static com.team.puddy.global.error.ErrorCode.USER_NOT_FOUND;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final UserQueryRepository userQueryRepository;
     private final QuestionRepository questionRepository;
-    private final AnswerQueryRepository answerQueryRepository;
+    private final AnswerRepository answerRepository;
 
     private final QuestionMapper questionMapper;
     private final AnswerMapper answerMapper;
@@ -62,7 +61,7 @@ public class UserService {
 
     @Transactional
     public LoginToken login(LoginUserRequest request) {
-        User user = userQueryRepository.findByAccount(request.account()).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+        User user = userRepository.findByAccount(request.account()).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
             throw new BusinessException(INVALID_PASSWORD);
         }
@@ -105,7 +104,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public ResponseUserInfoDto getUserInfo(Long userId) {
-        User findUser = userQueryRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+        User findUser = userRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         Image userImage = findUser.getImage();
         boolean hasPet = findUser.getPet() != null;
         if (userImage == null) { // 해당 유저의 이미지가 없는 경우
@@ -117,7 +116,7 @@ public class UserService {
 
     @Transactional
     public void updateProfile(Long userId, String nickname, MultipartFile file) throws IOException {
-        User findUser = userQueryRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
+        User findUser = userRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
 
         imageService.updateImageUser(findUser, file);
         findUser.setNickname(nickname);
@@ -132,7 +131,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public ResponsePostDto getMyPost(Long userId) {
         List<Question> questionList = questionRepository.findQuestionListByUserId(userId);
-        List<Answer> answerList = answerQueryRepository.findAnswerListByUserId(userId);
+        List<Answer> answerList = answerRepository.findAnswerListByUserId(userId);
 
         List<ResponseQuestionExcludeAnswerDto> questionDtoList = questionList.stream().map(questionMapper::toDto).toList();
         List<ResponseAnswerDtoExcludeUser> answerDtoList = answerList.stream().map(answerMapper::toDto).toList();
@@ -144,7 +143,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public void duplicateEmailCheck(String email) {
-        if (userQueryRepository.isExistsEmail(email)) {
+        if (userRepository.isExistsEmail(email)) {
             log.error("중복 에러 발생");
             throw new BusinessException(DUPLICATE_EMAIL, DUPLICATE_EMAIL.getMessage());
         }
@@ -153,14 +152,14 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public void duplicateAccountCheck(String account) {
-        if (userQueryRepository.isExistsAccount(account)) {
+        if (userRepository.isExistsAccount(account)) {
             throw new BusinessException(DUPLICATE_ACCOUNT, DUPLICATE_ACCOUNT.getMessage());
         }
     }
 
     @Transactional(readOnly = true)
     public void duplicateNicknameCheck(String nickname) {
-        if (userQueryRepository.isExistsNickname(nickname)) {
+        if (userRepository.isExistsNickname(nickname)) {
             log.error("중복 에러 발생");
             throw new BusinessException(DUPLICATE_NICKNAME, DUPLICATE_NICKNAME.getMessage());
         }
@@ -169,7 +168,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public boolean checkHasPet(Long userId) {
-        return userQueryRepository.findByIdWithPet(userId).orElseThrow(() -> new BusinessException(USER_NOT_FOUND))
+        return userRepository.findByIdWithPet(userId).orElseThrow(() -> new BusinessException(USER_NOT_FOUND))
                 .getPet() != null; // 펫이 있으면 true, 없으면 false
     }
 
@@ -183,9 +182,11 @@ public class UserService {
 
     @Transactional
     public void changePassword(String password, Long userId) {
-        User findUser = userQueryRepository.findByUserId(userId)
+        User findUser = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new NotFoundException(CHANGE_PASSWORD_FAIL));
         findUser.updatePassword(passwordEncoder.encode(password));
     }
+
+
 
 }

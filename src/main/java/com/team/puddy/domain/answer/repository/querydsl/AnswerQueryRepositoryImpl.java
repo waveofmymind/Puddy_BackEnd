@@ -1,4 +1,4 @@
-package com.team.puddy.domain.answer.repository;
+package com.team.puddy.domain.answer.repository.querydsl;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.team.puddy.domain.answer.domain.Answer;
@@ -13,7 +13,7 @@ import static com.team.puddy.domain.user.domain.QUser.user;
 
 @Repository
 @RequiredArgsConstructor
-public class AnswerQueryRepository {
+public class AnswerQueryRepositoryImpl implements AnswerQueryRepository{
 
     private final JPAQueryFactory queryFactory;
 
@@ -35,7 +35,7 @@ public class AnswerQueryRepository {
                 .fetch();
     }
 
-    public Optional<Answer> findAnswerForUpdate(Long answerId,Long userId,Long questionId) {
+    public Optional<Answer> findAnswerForUpdate(Long answerId, Long userId, Long questionId) {
         return Optional.ofNullable(queryFactory.selectFrom(answer)
                 .where(answer.id.eq(answerId)
                         .and(user.id.eq(userId))

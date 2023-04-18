@@ -7,7 +7,7 @@ import com.team.puddy.domain.comment.dto.request.RequestCommentDto;
 import com.team.puddy.domain.comment.dto.request.UpdateCommentDto;
 import com.team.puddy.domain.comment.repository.CommentRepository;
 import com.team.puddy.domain.user.domain.User;
-import com.team.puddy.domain.user.repository.UserQueryRepository;
+import com.team.puddy.domain.user.repository.UserRepository;
 import com.team.puddy.global.error.ErrorCode;
 import com.team.puddy.global.error.exception.NotFoundException;
 import com.team.puddy.global.mapper.CommentMapper;
@@ -21,13 +21,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class CommentService {
 
-    private final UserQueryRepository userQueryRepository;
+    private final UserRepository userRepository;
     private final ArticleRepository articleRepository;
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
     @Transactional
     public void addComment(RequestCommentDto request, Long articleId, Long userId) {
-        User findUser = userQueryRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
+        User findUser = userRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
         Article findArticle = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
 
         Comment comment = commentMapper.toEntity(request, findArticle, findUser);

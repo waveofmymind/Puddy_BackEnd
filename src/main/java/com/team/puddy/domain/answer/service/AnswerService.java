@@ -4,7 +4,6 @@ import com.team.puddy.domain.answer.domain.Answer;
 import com.team.puddy.domain.answer.dto.RequestAnswerDto;
 import com.team.puddy.domain.answer.dto.ResponseAnswerDto;
 import com.team.puddy.domain.answer.dto.request.UpdateAnswerDto;
-import com.team.puddy.domain.answer.repository.AnswerQueryRepository;
 import com.team.puddy.domain.answer.repository.AnswerRepository;
 import com.team.puddy.domain.question.domain.Question;
 import com.team.puddy.domain.question.repository.QuestionRepository;
@@ -28,9 +27,7 @@ import java.util.List;
 public class AnswerService {
 
     private final AnswerRepository answerRepository;
-
-    private final AnswerQueryRepository answerQueryRepository;
-
+    
     private final UserRepository userRepository;
 
     private final QuestionRepository questionRepository;
@@ -49,7 +46,7 @@ public class AnswerService {
 
     @Transactional(readOnly = true)
     public List<ResponseAnswerDto> getAnswerList(Long questionId) {
-        return answerQueryRepository.getAnswerList(questionId)
+        return answerRepository.getAnswerList(questionId)
                 .stream()
                 .map(answer -> answerMapper.toDto(answer, answer.getUser()))
                 .toList();
@@ -70,7 +67,7 @@ public class AnswerService {
     }
 
     public void updateAnswer(UpdateAnswerDto updateDto, Long answerId, Long questionId, Long userId) {
-        Answer findAnswer = answerQueryRepository.findAnswerForUpdate(answerId, userId, questionId)
+        Answer findAnswer = answerRepository.findAnswerForUpdate(answerId, userId, questionId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.UNAUTHORIZED_OPERATION));
 
         findAnswer.updateAnswer(updateDto.content());
@@ -78,7 +75,7 @@ public class AnswerService {
     }
 
     public void deleteAnswer(Long answerId, Long questionId, Long userId) {
-        if (!answerQueryRepository.existsAnswer(answerId, questionId, userId)) {
+        if (!answerRepository.existsAnswer(answerId, questionId, userId)) {
             throw new NotFoundException(ErrorCode.UNAUTHORIZED_OPERATION);
         }
         answerRepository.deleteById(answerId);

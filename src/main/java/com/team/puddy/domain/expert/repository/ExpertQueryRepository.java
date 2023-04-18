@@ -16,47 +16,15 @@ import static com.team.puddy.domain.image.domain.QImage.image;
 import static com.team.puddy.domain.review.domain.QReview.review;
 import static com.team.puddy.domain.user.domain.QUser.user;
 
-@RequiredArgsConstructor
-@Repository
-public class ExpertQueryRepository {
 
-    private final JPAQueryFactory queryFactory;
+public interface ExpertQueryRepository {
 
-    public Optional<Expert> findByIdWithReview(Long expertId) {
-        return Optional.ofNullable(queryFactory.selectFrom(expert)
-                .leftJoin(expert.reviewList, review).fetchJoin()
-                .where(expert.id.eq(expertId))
-                .fetchFirst());
-    }
+    Optional<Expert> findByIdWithReview(Long expertId);
 
-    public Optional<Expert> findByIdWithUser(Long expertId) {
-        return Optional.ofNullable(queryFactory.selectFrom(expert)
-                .leftJoin(expert.user,user).fetchJoin()
-                .leftJoin(user.image,image).fetchJoin()
-                .leftJoin(expert.reviewList, review).fetchJoin()
-                .where(expert.id.eq(expertId))
-                .fetchFirst());
-    }
+    Optional<Expert> findByIdWithUser(Long expertId);
 
-    public List<Expert> findExpertListForMainPage() {
-        return queryFactory.select(expert)
-                .from(expert)
-                .leftJoin(expert.user, user).fetchJoin()
-                .leftJoin(user.image, image).fetchJoin()
-                .orderBy(expert.modifiedDate.desc())
-                .limit(5).fetch();
-    }
+    List<Expert> findExpertListForMainPage();
 
-    public Slice<Expert> findExpertList(Pageable pageable) {
-        List<Expert> expertList = queryFactory.selectFrom(expert)
-                .join(expert.user, user).fetchJoin()
-                .leftJoin(user.image, image).fetchJoin()
-                .orderBy(expert.modifiedDate.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize() + 1)
-                .fetch();
-
-        return new SliceImpl<>(expertList,pageable,expertList.size() > pageable.getPageSize());
-    }
+    Slice<Expert> findExpertList(Pageable pageable);
 
 }

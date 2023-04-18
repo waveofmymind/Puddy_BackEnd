@@ -1,9 +1,12 @@
 package com.team.puddy.global.config.auth;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,6 +15,8 @@ import java.util.Collections;
 
 @Slf4j
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class JwtUserDetails implements UserDetails {
     private Long id;
     private String role;
