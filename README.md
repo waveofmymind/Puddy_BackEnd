@@ -28,8 +28,9 @@
 
 ## ERD(2023.04.07)
 
-![erd 0410](https://user-images.githubusercontent.com/93868431/230784458-59f831ae-8161-42af-9889-fc9bd2fb75e0.png)
+![puddy-erd-2023-04-18](https://user-images.githubusercontent.com/93868431/232802025-0189a5a9-e375-46cf-b4d4-ce6b002858b6.png)
 
+![erd 0410](https://user-images.githubusercontent.com/93868431/230784458-59f831ae-8161-42af-9889-fc9bd2fb75e0.png)
 ## API 명세서
 
 [API 명세서](https://documenter.getpostman.com/view/23164315/2s93RMVFEm#22ba6470-2481-40e0-a70f-dbf2b4361306)
