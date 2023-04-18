@@ -26,14 +26,17 @@
 
 ![image](https://user-images.githubusercontent.com/93868431/230275264-20f15fc0-3b38-47d5-8577-eb8645e37571.png)
 
-## ERD(2023.04.07)
+## ERD
 
 ![puddy-erd-2023-04-18](https://user-images.githubusercontent.com/93868431/232802025-0189a5a9-e375-46cf-b4d4-ce6b002858b6.png)
 
-![erd 0410](https://user-images.githubusercontent.com/93868431/230784458-59f831ae-8161-42af-9889-fc9bd2fb75e0.png)
 ## API 명세서
 
 [API 명세서](https://documenter.getpostman.com/view/23164315/2s93RMVFEm#22ba6470-2481-40e0-a70f-dbf2b4361306)
+
+## 테스트 기록
+
+![image](https://user-images.githubusercontent.com/93868431/232841335-996452fc-32f3-44cd-a6a5-89bf806d6ef1.png)
 
 ## 트러블 슈팅 및 기술적 도전
 
