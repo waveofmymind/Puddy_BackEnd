@@ -21,7 +21,7 @@ public class AnswerController {
 
     private final AnswerService answerService;
 
-    @PostMapping("/questions/{questionId}/answers/write")
+    @PostMapping("/questions/{questionId}/answers")
     public Response<Void> addAnswer(@PathVariable Long questionId,
                                          @RequestBody RequestAnswerDto requestDto,
                                          @AuthenticationPrincipal JwtUserDetails user) {

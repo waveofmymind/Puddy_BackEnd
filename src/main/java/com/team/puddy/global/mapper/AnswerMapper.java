@@ -31,6 +31,7 @@ public interface AnswerMapper {
     default ResponseAnswerDto toDto(Answer answer, User user) {
         return ResponseAnswerDto.builder()
                 .id(answer.getId())
+                .userId(user.getId())
                 .content(answer.getContent())
                 .nickname(user.getNickname())
                 .selected(answer.isSelected())
