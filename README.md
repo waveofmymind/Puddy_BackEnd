@@ -28,7 +28,7 @@
 
 ## ERD
 
-![puddy-erd-2023-04-18](https://user-images.githubusercontent.com/93868431/232802025-0189a5a9-e375-46cf-b4d4-ce6b002858b6.png)
+![puddy-erd-0419](https://user-images.githubusercontent.com/93868431/232953874-7f95fe60-1899-4058-a109-e02b2a98fb54.png)
 
 ## API 명세서
 
@@ -47,6 +47,8 @@
 - [Redis 캐시를 사용한 JWT 리프레시 토큰 관리하기](https://waveofymymind.tistory.com/113)
 
 - [JPA N+1 해결하기](https://waveofymymind.tistory.com/114)
+
+- [WebMvcTest에서 발생하는 SpringSecurity 의존성 문제 해결하기](https://waveofymymind.tistory.com/117)
 
 ## [회의 기록 노션](https://puddy.notion.site/PUDDY-cbab6d6425cd4103b9461eff301ca7e5)
 
