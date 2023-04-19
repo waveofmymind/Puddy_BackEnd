@@ -9,6 +9,7 @@ import com.team.puddy.domain.pet.controller.PetController;
 import com.team.puddy.domain.question.controller.QuestionController;
 import com.team.puddy.domain.question.service.QuestionService;
 import com.team.puddy.domain.user.controller.UserController;
+import com.team.puddy.domain.user.repository.UserRepository;
 import com.team.puddy.domain.user.service.UserService;
 import com.team.puddy.global.config.security.SecurityConfig;
 import com.team.puddy.global.config.security.jwt.JwtAuthorizationFilter;
@@ -51,5 +52,8 @@ public abstract class ControllerTest {
 
     @MockBean
     public QuestionService questionService;
+
+    @MockBean
+    public UserRepository userRepository;
 
 }

@@ -2,6 +2,7 @@ package com.team.puddy.domain;
 
 import com.team.puddy.domain.answer.domain.Answer;
 import com.team.puddy.domain.answer.dto.RequestAnswerDto;
+import com.team.puddy.domain.answer.dto.ResponseAnswerDtoExcludeUser;
 import com.team.puddy.domain.answer.dto.request.UpdateAnswerDto;
 import com.team.puddy.domain.article.domain.Article;
 import com.team.puddy.domain.article.dto.request.RequestArticleDto;
@@ -34,6 +35,7 @@ import com.team.puddy.domain.user.domain.User;
 import com.team.puddy.domain.user.dto.request.LoginUserRequest;
 import com.team.puddy.domain.user.dto.request.RegisterUserRequest;
 import com.team.puddy.domain.user.dto.response.ResponsePostDto;
+import com.team.puddy.domain.user.dto.response.ResponseUserInfoDto;
 import com.team.puddy.domain.user.dto.response.TokenReissueDto;
 import com.team.puddy.global.config.auth.JwtUserDetails;
 import com.team.puddy.global.config.security.jwt.LoginToken;
@@ -389,5 +391,34 @@ public class TestEntityUtils {
         return TokenReissueDto.builder()
                 .accessToken("sample-access-token")
                 .refreshToken("sample-refresh-token").build();
+    }
+
+    public static ResponsePostDto responsePostDto() {
+        return ResponsePostDto.builder()
+                .questionList(questionList())
+                .answerList(answerList()).build();
+
+    }
+
+    private static List<ResponseAnswerDtoExcludeUser> answerList() {
+        User user = user();
+        Answer answer1 = answer();
+        Answer answer2 = answer();
+        Answer answer3 = answer();
+        Answer answer4 = answer();
+        Answer answer5 = answer();
+        List<Answer> answers = List.of(answer1, answer2, answer3, answer4, answer5);
+        return answers.stream().map(answer -> ResponseAnswerDtoExcludeUser.builder().id(answer.getId())
+                .nickname(answer.getUser().getNickname())
+                .postCategory(answer.getPostCategory())
+                .content(answer.getContent())
+                .build()).toList();
+    }
+
+    public static ResponseUserInfoDto responseUserInfoDto() {
+        return ResponseUserInfoDto.builder()
+                .hasPet(true)
+                .imagePath("ssss")
+                .nickname("nickname").build();
     }
 }
