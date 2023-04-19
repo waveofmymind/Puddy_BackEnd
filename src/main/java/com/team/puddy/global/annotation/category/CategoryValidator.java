@@ -1,10 +1,7 @@
-package com.team.puddy.global.mapper.validator;
+package com.team.puddy.global.annotation.category;
 
 
 import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-
-import com.team.puddy.global.mapper.validator.Category;
 
 public class CategoryValidator implements ConstraintValidator<Category, String> {
     @Override

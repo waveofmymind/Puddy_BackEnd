@@ -9,6 +9,7 @@ import com.team.puddy.domain.question.domain.Question;
 import com.team.puddy.domain.question.repository.QuestionRepository;
 import com.team.puddy.domain.user.domain.User;
 import com.team.puddy.domain.user.repository.UserRepository;
+import com.team.puddy.global.error.exception.NotFoundException;
 import com.team.puddy.global.mapper.AnswerMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 
 
@@ -66,6 +68,20 @@ public class AnswerServiceTest {
         verify(questionRepository, times(1)).findById(questionId);
         verify(answerMapper, times(1)).toEntity(requestAnswerDto, user, question);
         verify(answerRepository, times(1)).save(any(Answer.class));
+    }
+    @DisplayName("답변 추가 실패 테스트(유저 없음)")
+    @Test
+    public void givenRequest_whenAddAnswer_then400() {
+        Long userId = 1L;
+        Long questionId = 1L;
+        RequestAnswerDto requestAnswerDto = TestEntityUtils.requestAnswerDto();
+
+
+        given(userRepository.findById(userId)).willReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class, () -> answerService.addAnswer(requestAnswerDto, userId, questionId));
+
+        verify(userRepository, times(1)).findById(userId);
     }
 
     @DisplayName("답변 채택 테스트")

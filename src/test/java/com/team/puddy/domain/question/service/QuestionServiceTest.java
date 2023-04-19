@@ -40,19 +40,16 @@ public class QuestionServiceTest {
     private UserRepository userRepository;
     @Mock
     private QuestionMapper questionMapper;
-    @Mock
-    private AnswerMapper answerMapper;
 
     @Mock
     private ImageService imageService;
-
 
     @DisplayName("문제 등록 테스트")
     @Test
     void givenRequestDto_whenAddQuestion_thenSuccess() throws IOException {
         //given
         User user = TestEntityUtils.user();
-        RequestQuestionDto requestDto = TestEntityUtils.questionRequestDto();
+        RequestQuestionDto requestDto = TestEntityUtils.requestQuestionDto();
         Question question = TestEntityUtils.question(user);
         given(userRepository.findById(any(Long.class))).willReturn(Optional.ofNullable(user));
         given(questionMapper.toEntity(any(RequestQuestionDto.class),any(List.class),any(User.class))).willReturn(question);
@@ -123,13 +120,6 @@ public class QuestionServiceTest {
 
     }
 
-    @Transactional
-    public void increaseViewCount(Long questionId) {
-        if (!questionRepository.existsById(questionId)) {
-            throw new EntityNotFoundException();
-        }
-        questionRepository.increaseViewCount(questionId);
-    }
 
 
 

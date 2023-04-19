@@ -7,13 +7,21 @@ import com.team.puddy.domain.article.domain.Article;
 import com.team.puddy.domain.article.dto.request.RequestArticleDto;
 import com.team.puddy.domain.article.dto.request.UpdateArticleDto;
 import com.team.puddy.domain.article.dto.response.ResponseArticleDto;
+import com.team.puddy.domain.comment.domain.Comment;
+import com.team.puddy.domain.comment.dto.request.RequestCommentDto;
+import com.team.puddy.domain.comment.dto.request.UpdateCommentDto;
 import com.team.puddy.domain.expert.domain.Expert;
 import com.team.puddy.domain.expert.dto.RequestExpertDto;
 import com.team.puddy.domain.expert.dto.ResponseExpertDto;
+import com.team.puddy.domain.image.domain.Image;
 import com.team.puddy.domain.pet.domain.Pet;
 import com.team.puddy.domain.pet.dto.request.RequestPetDto;
+import com.team.puddy.domain.pet.dto.request.UpdatePetDto;
+import com.team.puddy.domain.pet.dto.response.ResponsePetDto;
 import com.team.puddy.domain.question.domain.Question;
 import com.team.puddy.domain.question.dto.request.RequestQuestionDto;
+import com.team.puddy.domain.question.dto.request.UpdateQuestionDto;
+import com.team.puddy.domain.question.dto.response.QuestionListResponseDto;
 import com.team.puddy.domain.question.dto.response.QuestionResponseDto;
 import com.team.puddy.domain.question.dto.response.ResponseQuestionExcludeAnswerDto;
 import com.team.puddy.domain.review.domain.Review;
@@ -22,9 +30,13 @@ import com.team.puddy.domain.review.dto.ResponseReviewDto;
 import com.team.puddy.domain.type.Category;
 import com.team.puddy.domain.type.UserRole;
 import com.team.puddy.domain.user.domain.User;
+import com.team.puddy.domain.user.dto.request.LoginUserRequest;
 import com.team.puddy.domain.user.dto.request.RegisterUserRequest;
+import com.team.puddy.domain.user.dto.response.ResponsePostDto;
 import com.team.puddy.global.config.auth.JwtUserDetails;
+import com.team.puddy.global.config.security.jwt.LoginToken;
 import org.springframework.data.domain.*;
+import org.springframework.mock.web.MockMultipartFile;
 
 import java.util.List;
 
@@ -57,7 +69,7 @@ public class TestEntityUtils {
                 .build();
     }
 
-    public static RequestQuestionDto questionRequestDto() {
+    public static RequestQuestionDto requestQuestionDto() {
         return RequestQuestionDto.builder()
                 .title("test title")
                 .content("test content")
@@ -67,14 +79,13 @@ public class TestEntityUtils {
     }
 
     public static RegisterUserRequest createRequestDto() {
-        RegisterUserRequest request = RegisterUserRequest.builder()
+        return RegisterUserRequest.builder()
                 .account("puddy")
                 .username("username")
-                .email("email@test.com")
+                .email("sjun0913@gmail.com")
                 .isNotificated(true)
                 .password("1234")
                 .build();
-        return request;
     }
 
     public static RequestExpertDto requestExpertDto() {
@@ -147,7 +158,7 @@ public class TestEntityUtils {
         return QuestionResponseDto.builder().questionId(1L).title("22")
                 .category("산책")
                 .content("내용")
-                .nickname("보배")
+                .nickname("상준")
                 .isSolved(true)
                 .postCategory(2)
                 .viewCount(2L).build();
@@ -201,7 +212,7 @@ public class TestEntityUtils {
         return RegisterUserRequest.builder()
                 .account("account")
                 .username("username")
-                .email("email")
+                .email("email@gmail.com")
                 .isNotificated(true)
                 .password("password")
                 .build();
@@ -258,5 +269,105 @@ public class TestEntityUtils {
                 .content("수정 내용")
                 .build();
 
+    }
+
+    public static Image image() {
+        return Image.builder()
+                .id(1L)
+                .imagePath("sss")
+                .originalName("ssss")
+                .storedName("sss")
+                .build();
+
+
+    }
+
+    public static ResponsePetDto responsePetDto() {
+        return ResponsePetDto.builder().age(10)
+                .breed("말라뮤트")
+                .gender(true)
+                .weight(2.8f)
+                .isNeutered(true)
+                .imagePath(image().getImagePath())
+                .note("테스트메모")
+                .name("아롱이")
+                .build();
+    }
+
+    public static UpdatePetDto updatePetDto() {
+        return UpdatePetDto.builder().
+        age(10).breed("안녕")
+                .gender(true)
+                .note("메모")
+                .name("아롱이")
+                .weight(2.8f)
+                .build();
+    }
+
+    public static RequestCommentDto requestCommentDto() {
+        return RequestCommentDto.builder()
+                .content("content")
+                .build();
+    }
+
+    public static UpdateCommentDto updateCommentDto() {
+        return UpdateCommentDto.builder()
+                .content("content")
+                .build();
+    }
+
+    public static Comment comment() {
+        return Comment.builder()
+                .id(1L)
+                .content("content")
+                .user(user())
+                .build();
+    }
+
+    public static LoginUserRequest loginUserRequest() {
+        return LoginUserRequest.builder()
+                .account("account")
+                .password("password")
+                .build();
+    }
+
+    public static LoginToken loginToken() {
+        return LoginToken.builder().accessToken("Bearer sample-access-token")
+                .refreshToken("Bearer sample-refresh-token")
+                .build();
+    }
+
+    public static MockMultipartFile mockMultipartFile() {
+        return new MockMultipartFile("images", "image1.jpg", "image/jpeg", "image1 content".getBytes());
+    }
+
+    public static UpdateQuestionDto updateQuestionDto() {
+        return UpdateQuestionDto.builder()
+                .title("title")
+                .content("content")
+                .category("산책")
+                .build();
+    }
+
+    public static QuestionResponseDto questionResponseDto() {
+        return QuestionResponseDto.builder()
+                .questionId(1L)
+                .title("title")
+                .content("content")
+                .category("산책")
+                .nickname("nickname")
+                .answerList(List.of())
+                .pet(pet())
+                .images(List.of())
+                .isSolved(true)
+                .postCategory(1)
+                .viewCount(1L)
+                .build();
+    }
+
+    public static QuestionListResponseDto questionListResponseDto() {
+        return QuestionListResponseDto.builder()
+                .questionList(questionList())
+                .hasNextPage(true).build();
     }
 }

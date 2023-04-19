@@ -34,7 +34,6 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
 
-
     // 정적 자원에 대해서는 Security 설정을 적용하지 않음
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {

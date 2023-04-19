@@ -1,4 +1,4 @@
-package com.team.puddy.global.mapper.validator;
+package com.team.puddy.global.annotation.category;
 
 import javax.validation.Constraint;
 import java.lang.annotation.ElementType;

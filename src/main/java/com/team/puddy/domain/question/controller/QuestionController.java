@@ -30,7 +30,6 @@ public class QuestionController {
 
     private final QuestionService questionService;
 
-
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary = "QNA 게시글 등록 메서드")
     public Response<?> registerQuestion(@RequestPart("request") RequestQuestionDto requestDto,

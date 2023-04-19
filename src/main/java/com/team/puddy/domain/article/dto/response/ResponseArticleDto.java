@@ -1,10 +1,8 @@
 package com.team.puddy.domain.article.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.team.puddy.domain.answer.dto.ResponseAnswerDto;
 import com.team.puddy.domain.article.domain.ArticleTag;
 import com.team.puddy.domain.comment.dto.response.ResponseCommentDto;
-import com.team.puddy.global.mapper.validator.Category;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
