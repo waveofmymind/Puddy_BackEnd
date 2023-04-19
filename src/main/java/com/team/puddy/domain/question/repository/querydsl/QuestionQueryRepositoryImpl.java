@@ -99,7 +99,7 @@ public class QuestionQueryRepositoryImpl implements QuestionQueryRepository {
     }
 
     @Override
-    public Slice<Question> findByTitleStartWithOrderByModifiedDateDesc(Pageable pageable, String keyword) {
+    public Slice<Question> findByTitleStartWithOrderByCreatedDateDesc(Pageable pageable, String keyword) {
         List<Question> questionList = queryFactory.selectFrom(question).distinct()
                 .leftJoin(question.user, user).fetchJoin()
                 .leftJoin(user.expert, expert).fetchJoin()
@@ -108,6 +108,48 @@ public class QuestionQueryRepositoryImpl implements QuestionQueryRepository {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize() + 1)
                 .orderBy(question.createdDate.desc())
+                .fetch();
+
+        boolean hasNext = questionList.size() > pageable.getPageSize();
+        if (hasNext) {
+            questionList.remove(questionList.size() - 1);
+        }
+
+
+        return new SliceImpl<>(questionList, pageable, hasNext);
+    }
+
+    @Override
+    public Slice<Question> findByTitleStartWithOrderByViewCountDesc(Pageable pageable, String keyword) {
+        List<Question> questionList = queryFactory.selectFrom(question).distinct()
+                .leftJoin(question.user, user).fetchJoin()
+                .leftJoin(user.expert, expert).fetchJoin()
+                .leftJoin(user.pet, pet).fetchJoin()
+                .where(question.title.startsWith(keyword))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize() + 1)
+                .orderBy(question.viewCount.desc())
+                .fetch();
+
+        boolean hasNext = questionList.size() > pageable.getPageSize();
+        if (hasNext) {
+            questionList.remove(questionList.size() - 1);
+        }
+
+
+        return new SliceImpl<>(questionList, pageable, hasNext);
+    }
+
+    @Override
+    public Slice<Question> findByTitleStartWithOrderByCreatedDate(Pageable pageable, String keyword) {
+        List<Question> questionList = queryFactory.selectFrom(question).distinct()
+                .leftJoin(question.user, user).fetchJoin()
+                .leftJoin(user.expert, expert).fetchJoin()
+                .leftJoin(user.pet, pet).fetchJoin()
+                .where(question.title.startsWith(keyword))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize() + 1)
+                .orderBy(question.createdDate.asc())
                 .fetch();
 
         boolean hasNext = questionList.size() > pageable.getPageSize();

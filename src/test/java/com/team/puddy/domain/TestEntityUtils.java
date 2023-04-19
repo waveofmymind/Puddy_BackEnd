@@ -28,15 +28,19 @@ import com.team.puddy.domain.review.domain.Review;
 import com.team.puddy.domain.review.dto.RequestReviewDto;
 import com.team.puddy.domain.review.dto.ResponseReviewDto;
 import com.team.puddy.domain.type.Category;
+import com.team.puddy.domain.type.JwtProvider;
 import com.team.puddy.domain.type.UserRole;
 import com.team.puddy.domain.user.domain.User;
 import com.team.puddy.domain.user.dto.request.LoginUserRequest;
 import com.team.puddy.domain.user.dto.request.RegisterUserRequest;
 import com.team.puddy.domain.user.dto.response.ResponsePostDto;
+import com.team.puddy.domain.user.dto.response.TokenReissueDto;
 import com.team.puddy.global.config.auth.JwtUserDetails;
 import com.team.puddy.global.config.security.jwt.LoginToken;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -48,8 +52,9 @@ public class TestEntityUtils {
                 .id(1L)
                 .username("상준")
                 .account("user1")
-                .password("1234")
                 .nickname("퍼디1234")
+                .provider(JwtProvider.PUDDY)
+                .isNotificated(true)
                 .email("test@email.com")
                 .role(UserRole.USER.getRole())
                 .build();
@@ -82,6 +87,7 @@ public class TestEntityUtils {
         return RegisterUserRequest.builder()
                 .account("puddy")
                 .username("username")
+                .password("1234")
                 .email("sjun0913@gmail.com")
                 .isNotificated(true)
                 .password("1234")
@@ -212,6 +218,7 @@ public class TestEntityUtils {
         return RegisterUserRequest.builder()
                 .account("account")
                 .username("username")
+                .password("password")
                 .email("email@gmail.com")
                 .isNotificated(true)
                 .password("password")
@@ -331,6 +338,13 @@ public class TestEntityUtils {
                 .build();
     }
 
+    public static LoginUserRequest wrongLoginUserRequest() {
+        return LoginUserRequest.builder()
+                .account("account2")
+                .password("password")
+                .build();
+    }
+
     public static LoginToken loginToken() {
         return LoginToken.builder().accessToken("Bearer sample-access-token")
                 .refreshToken("Bearer sample-refresh-token")
@@ -369,5 +383,11 @@ public class TestEntityUtils {
         return QuestionListResponseDto.builder()
                 .questionList(questionList())
                 .hasNextPage(true).build();
+    }
+
+    public static TokenReissueDto tokenReissueDto() {
+        return TokenReissueDto.builder()
+                .accessToken("sample-access-token")
+                .refreshToken("sample-refresh-token").build();
     }
 }

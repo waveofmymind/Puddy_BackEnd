@@ -70,15 +70,11 @@ public class QuestionServiceTest {
         Page<Question> questionPage = new PageImpl<>(Collections.singletonList(
                 TestEntityUtils.question(user)
         ));
-        List<ResponseQuestionExcludeAnswerDto> questionList = List.of(
-                ResponseQuestionExcludeAnswerDto.builder().content("s").build()
-        );
-        Slice<ResponseQuestionExcludeAnswerDto> questions = TestEntityUtils.questionPageList();
-        given(questionRepository.findByTitleStartWithOrderByModifiedDateDesc(any(),any(String.class))).willReturn(questionPage);
+        given(questionRepository.findByTitleStartWithOrderByCreatedDateDesc(any(),any(String.class))).willReturn(questionPage);
         //when
-        questionService.getQuestionListByTitleStartWith(page,"");
+        questionService.getQuestionListByTitleStartWith(page,"","desc");
         //then
-        verify(questionRepository).findByTitleStartWithOrderByModifiedDateDesc(page,"");
+        verify(questionRepository).findByTitleStartWithOrderByCreatedDateDesc(page,"");
     }
 
     @DisplayName("문제 전체 개수 조회 테스트")

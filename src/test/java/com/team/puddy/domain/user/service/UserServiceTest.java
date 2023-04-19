@@ -84,7 +84,6 @@ public class UserServiceTest {
     @Test
     public void givenRequest_whenJoin_thenOK() {
 
-
         // Given
         User user = TestEntityUtils.user();
         RegisterUserRequest registerUserRequest = TestEntityUtils.registerUserRequest();

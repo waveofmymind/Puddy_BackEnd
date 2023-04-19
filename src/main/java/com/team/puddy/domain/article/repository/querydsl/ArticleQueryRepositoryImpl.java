@@ -38,7 +38,7 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
     }
 
 
-    public Slice<Article> findAllByTitleStartingWithOrderByModifiedDateDesc(String keyword, Pageable pageable) {
+    public Slice<Article> findAllByTitleStartingWithOrderByCreatedDateDesc(String keyword, Pageable pageable) {
             List<Article> articleList = queryFactory.selectFrom(article).distinct()
                     .leftJoin(article.user,user).fetchJoin()
                     .leftJoin(user.expert,expert).fetchJoin()
@@ -53,6 +53,40 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
                 articleList.remove(articleList.size()-1);
             }
             return new SliceImpl<>(articleList,pageable,hasNext);
+    }
+
+    public Slice<Article> findAllByTitleStartingWithOrderByCreatedDateAsc(String keyword, Pageable pageable) {
+        List<Article> articleList = queryFactory.selectFrom(article).distinct()
+                .leftJoin(article.user,user).fetchJoin()
+                .leftJoin(user.expert,expert).fetchJoin()
+                .where(article.title.startsWith(keyword))
+                .orderBy(article.createdDate.asc())
+                .limit(pageable.getPageSize() + 1)
+                .offset(pageable.getOffset())
+                .fetch();
+
+        boolean hasNext = articleList.size() > pageable.getPageSize();
+        if (hasNext) {
+            articleList.remove(articleList.size()-1);
+        }
+        return new SliceImpl<>(articleList,pageable,hasNext);
+    }
+
+    public Slice<Article> findAllByTitleStartingWithOrderByViewCountDesc(String keyword, Pageable pageable) {
+        List<Article> articleList = queryFactory.selectFrom(article).distinct()
+                .leftJoin(article.user,user).fetchJoin()
+                .leftJoin(user.expert,expert).fetchJoin()
+                .where(article.title.startsWith(keyword))
+                .orderBy(article.viewCount.desc())
+                .limit(pageable.getPageSize() + 1)
+                .offset(pageable.getOffset())
+                .fetch();
+
+        boolean hasNext = articleList.size() > pageable.getPageSize();
+        if (hasNext) {
+            articleList.remove(articleList.size()-1);
+        }
+        return new SliceImpl<>(articleList,pageable,hasNext);
     }
 
     public List<Article> findPopularArticleList() {

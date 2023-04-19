@@ -25,6 +25,10 @@ public interface QuestionQueryRepository {
     Optional<Question> findQuestionForModify(Long questionId, Long userId);
 
 
-    Slice<Question> findByTitleStartWithOrderByModifiedDateDesc(Pageable page, String keyword);
+    Slice<Question> findByTitleStartWithOrderByCreatedDateDesc(Pageable page, String keyword);
+
+    Slice<Question> findByTitleStartWithOrderByViewCountDesc(Pageable page, String keyword);
+
+    Slice<Question> findByTitleStartWithOrderByCreatedDate(Pageable page, String keyword);
 
 }

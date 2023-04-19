@@ -110,8 +110,13 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public ResponseArticleListDto getArticleListByTitleStartWith(Pageable pageable, String keyword) {
-        Slice<Article> articleList = articleRepository.findAllByTitleStartingWithOrderByModifiedDateDesc(keyword, pageable);
+    public ResponseArticleListDto getArticleListByTitleStartWith(Pageable pageable, String keyword,String sort) {
+        Slice<Article> articleList = switch (sort) {
+            case "asc" -> articleRepository.findAllByTitleStartingWithOrderByCreatedDateAsc(keyword, pageable);
+            case "viewCount" -> articleRepository.findAllByTitleStartingWithOrderByViewCountDesc(keyword, pageable);
+            default -> articleRepository.findAllByTitleStartingWithOrderByCreatedDateDesc(keyword, pageable);
+        };
+
         List<ResponseArticleExcludeCommentDto> articleDtos = articleList.stream().map(article -> {
             Long likeCount = likeRepository.countByArticleId(article.getId());
             String imagePath = getFirstImagePath(article.getImageList());

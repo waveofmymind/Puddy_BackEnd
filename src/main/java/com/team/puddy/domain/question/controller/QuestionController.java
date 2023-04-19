@@ -33,7 +33,7 @@ public class QuestionController {
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary = "QNA 게시글 등록 메서드")
     public Response<?> registerQuestion(@RequestPart("request") RequestQuestionDto requestDto,
-                                        @RequestPart(value = "images",required = false) List<MultipartFile> images,
+                                        @RequestPart(value = "images", required = false) List<MultipartFile> images,
                                         @AuthenticationPrincipal JwtUserDetails user) {
         questionService.addQuestion(requestDto, images, user.getUserId());
 
@@ -43,10 +43,10 @@ public class QuestionController {
     @PutMapping(value = "/{questionId}")
     public Response<?> updateQuestion(@PathVariable("questionId") Long questionId,
                                       @RequestPart("request") UpdateQuestionDto requestDto,
-                                      @RequestParam(value = "images",required = false) List<MultipartFile> images,
+                                      @RequestParam(value = "images", required = false) List<MultipartFile> images,
                                       @AuthenticationPrincipal JwtUserDetails user) {
 
-        questionService.updateQuestion(questionId,requestDto,images,user.getUserId());
+        questionService.updateQuestion(questionId, requestDto, images, user.getUserId());
         return Response.success();
 
     }
@@ -54,7 +54,7 @@ public class QuestionController {
     @DeleteMapping("/{questionId}")
     public Response<?> deleteQuestion(@PathVariable("questionId") Long questionId,
                                       @AuthenticationPrincipal JwtUserDetails user) {
-        questionService.deleteQuestion(questionId,user.getUserId());
+        questionService.deleteQuestion(questionId, user.getUserId());
 
         return Response.success();
     }
@@ -70,11 +70,12 @@ public class QuestionController {
 
     @GetMapping
     @Operation(summary = "QNA 리스트 조회 메서드")
-    public Response<QuestionListResponseDto> getQuestionList(@RequestParam(value = "keyword",defaultValue = "") String keyword,
-            @RequestParam int page) {
+    public Response<QuestionListResponseDto> getQuestionList(@RequestParam(value = "keyword", defaultValue = "") String keyword,
+                                                             @RequestParam(value = "sort", defaultValue = "desc") String sort,
+                                                             @RequestParam int page) {
         Pageable pageable = PageRequest.of(page - 1, 10);
 
-        QuestionListResponseDto questionListDto = questionService.getQuestionListByTitleStartWith(pageable,keyword);
+        QuestionListResponseDto questionListDto = questionService.getQuestionListByTitleStartWith(pageable, keyword, sort);
 
         return Response.success(questionListDto);
     }

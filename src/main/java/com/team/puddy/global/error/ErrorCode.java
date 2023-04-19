@@ -43,6 +43,7 @@ public enum ErrorCode {
     NEED_MORE_INFO(HttpStatus.BAD_REQUEST, "추가 정보가 필요합니다."),
     PUDDY_USER_ALREADY_EXIST(HttpStatus.BAD_REQUEST,"잘못된 접근입니다."),
     PROVIDER_NOT_SUPPORTED(HttpStatus.BAD_REQUEST,"지원하지 않는 로그인 방식입니다."),
+    INVALID_ACCOUNT(HttpStatus.BAD_REQUEST, "유효하지 않은 계정입니다."),
 
 
 

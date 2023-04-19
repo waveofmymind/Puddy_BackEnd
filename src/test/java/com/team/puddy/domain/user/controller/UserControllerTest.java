@@ -1,37 +1,26 @@
 package com.team.puddy.domain.user.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.team.puddy.domain.ControllerTest;
 import com.team.puddy.domain.TestEntityUtils;
 import com.team.puddy.domain.user.dto.request.LoginUserRequest;
+
 import com.team.puddy.domain.user.dto.request.RegisterUserRequest;
-import com.team.puddy.domain.user.dto.response.ResponsePostDto;
 import com.team.puddy.domain.user.service.UserService;
-import com.team.puddy.global.common.dto.Response;
-import com.team.puddy.global.config.WithMockAuthUser;
-import com.team.puddy.global.config.auth.JwtUserDetails;
-import com.team.puddy.global.config.security.SecurityConfig;
-import com.team.puddy.global.config.security.jwt.JwtAuthorizationFilter;
-import com.team.puddy.global.config.security.jwt.JwtVerifier;
+
 import com.team.puddy.global.config.security.jwt.LoginToken;
+
+import com.team.puddy.global.error.ErrorCode;
+import com.team.puddy.global.error.exception.BusinessException;
+import com.team.puddy.global.error.exception.NotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -39,26 +28,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = UserController.class,
-excludeFilters = {
-        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = SecurityConfig.class),
-        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtAuthorizationFilter.class),
-        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtVerifier.class)
-})
+
 @DisplayName("유저 API 테스트")
-public class UserControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @MockBean
-    private UserService userService;
+public class UserControllerTest extends ControllerTest {
 
 
     @DisplayName("로그인 API 테스트")
@@ -82,6 +57,48 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.data.refreshToken").value("Bearer sample-refresh-token"));
     }
 
+    @DisplayName("로그인시 아이디가 다를 경우 예외")
+    @Test
+    @WithMockUser
+    void givenWrongAccount_whenLogin_then400() throws Exception {
+        //given
+        LoginUserRequest loginUserRequest = TestEntityUtils.loginUserRequest();
+
+        //when
+        when(userService.login(loginUserRequest)).thenThrow(new NotFoundException(ErrorCode.INVALID_ACCOUNT));
+
+        //then
+        mockMvc.perform(post("/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsString(loginUserRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.resultCode").value("유효하지 않은 계정입니다."));
+
+        verify(userService, times(1)).login(loginUserRequest);
+    }
+
+    @DisplayName("로그인시 비밀번호가 틀린 경우 예외")
+    @Test
+    @WithMockUser
+    void givenWrongPassword_whenLogin_then() throws Exception {
+        //given
+        LoginUserRequest loginUserRequest = TestEntityUtils.loginUserRequest();
+
+        //when
+        when(userService.login(loginUserRequest)).thenThrow(new BusinessException(ErrorCode.INVALID_PASSWORD));
+
+        //then
+        mockMvc.perform(post("/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsString(loginUserRequest)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.resultCode").value("INVALID_PASSWORD"));
+
+        verify(userService, times(1)).login(loginUserRequest);
+    }
+
     @DisplayName("회원가입 API 테스트")
     @Test
     @WithMockUser
@@ -102,5 +119,5 @@ public class UserControllerTest {
         verify(userService, times(1)).join(registerUserRequest);
 
     }
-
 }
+

@@ -47,9 +47,11 @@ public class ArticleController {
     }
 
     @GetMapping
-    public Response<ResponseArticleListDto> getArticleList(@RequestParam int page, @RequestParam(required = false, defaultValue = "") String keyword) {
+    public Response<ResponseArticleListDto> getArticleList(@RequestParam int page,
+                                                           @RequestParam(required = false, defaultValue = "") String keyword,
+                                                           @RequestParam(required = false, defaultValue = "desc") String sort) {
         Pageable pageable = PageRequest.of(page - 1, 10);
-        ResponseArticleListDto articleList = articleService.getArticleListByTitleStartWith(pageable, keyword);
+        ResponseArticleListDto articleList = articleService.getArticleListByTitleStartWith(pageable, keyword, sort);
         return Response.success(articleList);
     }
 

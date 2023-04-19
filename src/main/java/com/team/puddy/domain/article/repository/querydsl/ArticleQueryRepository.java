@@ -12,11 +12,15 @@ public interface ArticleQueryRepository {
     Optional<Article> findArticleWithUserById(Long articleId);
 
 
-    Slice<Article> findAllByTitleStartingWithOrderByModifiedDateDesc(String keyword, Pageable pageable);
+    Slice<Article> findAllByTitleStartingWithOrderByCreatedDateDesc(String keyword, Pageable pageable);
 
     List<Article> findPopularArticleList();
 
     List<Article> findRecentArticleList();
 
     Optional<Article> findArticleForModify(Long articleId, Long userId);
+
+    Slice<Article> findAllByTitleStartingWithOrderByCreatedDateAsc(String keyword, Pageable pageable);
+
+    Slice<Article> findAllByTitleStartingWithOrderByViewCountDesc(String keyword, Pageable pageable);
 }

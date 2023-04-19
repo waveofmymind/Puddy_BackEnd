@@ -61,7 +61,7 @@ public class UserService {
 
     @Transactional
     public LoginToken login(LoginUserRequest request) {
-        User user = userRepository.findByAccount(request.account()).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+        User user = userRepository.findByAccount(request.account()).orElseThrow(() -> new NotFoundException(INVALID_ACCOUNT));
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
             throw new BusinessException(INVALID_PASSWORD);
         }

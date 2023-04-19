@@ -175,11 +175,12 @@ public class QuestionControllerTest {
     void givenKeywordAndPage_whenGetQuestionList_then200() throws Exception {
         // given
         String keyword = "test";
+        String sort = "desc";
         int page = 1;
         QuestionListResponseDto questionListResponseDto = TestEntityUtils.questionListResponseDto();
 
         // when
-        when(questionService.getQuestionListByTitleStartWith(any(Pageable.class), eq(keyword)))
+        when(questionService.getQuestionListByTitleStartWith(any(Pageable.class), eq(keyword),eq(sort)))
                 .thenReturn(questionListResponseDto);
 
         // then
@@ -191,6 +192,6 @@ public class QuestionControllerTest {
                 .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
                 .andExpect(jsonPath("$.data.questionList", hasSize(questionListResponseDto.questionList().size())));
 
-        verify(questionService, times(1)).getQuestionListByTitleStartWith(any(Pageable.class), eq(keyword));
+        verify(questionService, times(1)).getQuestionListByTitleStartWith(any(Pageable.class), eq(keyword),eq(sort));
     }
 }

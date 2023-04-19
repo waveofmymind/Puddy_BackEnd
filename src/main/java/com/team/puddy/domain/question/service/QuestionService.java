@@ -47,8 +47,12 @@ public class QuestionService {
 
 
     @Transactional(readOnly = true)
-    public QuestionListResponseDto getQuestionListByTitleStartWith(Pageable page,String keyword) {
-        Slice<Question> questionList = questionRepository.findByTitleStartWithOrderByModifiedDateDesc(page, keyword);
+    public QuestionListResponseDto getQuestionListByTitleStartWith(Pageable page,String keyword,String sort) {
+        Slice<Question> questionList = switch (sort) {
+            case "asc" -> questionRepository.findByTitleStartWithOrderByCreatedDate(page, keyword);
+            case "viewCount" -> questionRepository.findByTitleStartWithOrderByViewCountDesc(page, keyword);
+            default -> questionRepository.findByTitleStartWithOrderByCreatedDateDesc(page, keyword);
+        };
         return questionMapper.toDto(questionList.stream().map(questionMapper::toDto).toList(),questionList.hasNext());
     }
 
