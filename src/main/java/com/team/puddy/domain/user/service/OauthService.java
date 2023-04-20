@@ -31,16 +31,12 @@ public class OauthService {
     @Transactional
     public LoginToken loginOauthUser(OauthUserInfo userInfo) {
         Optional<User> optionalUser = userRepository.findByAccountAndEmail(userInfo.sub(), userInfo.email());
+        //TODO: 중복 없애려면 이메일만으로 찾아서 계정이 없으면 생성하고 있으면 로그인
+        User findUser = optionalUser.orElseThrow(NeedInfoRequiredException::new);
 
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            return jwtTokenUtils.createLoginToken(user);
-        } else {
-            User user = userMapper.toEntity(userInfo);
-            userRepository.save(user);
-            throw new NeedInfoRequiredException();
-        }
+        return jwtTokenUtils.createLoginToken(findUser);
     }
+
 
 
     @Transactional
@@ -55,11 +51,9 @@ public class OauthService {
             default -> throw new ProviderNotSupportedException();
         };
 
-        User findUser = userRepository.findByAccountAndEmail(oauthUserInfo.sub(), oauthUserInfo.email())
-                .orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
-
-        findUser.updateOauthUser(userRequest.isNotificated(), userRequest.provider());
-        return jwtTokenUtils.createLoginToken(findUser);
+        User user = userMapper.toEntityFromOauth(oauthUserInfo,userRequest);
+        userRepository.save(user);
+        return jwtTokenUtils.createLoginToken(user);
     }
 
 

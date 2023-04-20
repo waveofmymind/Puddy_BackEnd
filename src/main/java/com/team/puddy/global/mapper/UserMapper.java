@@ -4,6 +4,7 @@ import com.team.puddy.domain.image.domain.Image;
 import com.team.puddy.domain.type.JwtProvider;
 import com.team.puddy.domain.type.UserRole;
 import com.team.puddy.domain.user.domain.User;
+import com.team.puddy.domain.user.dto.request.OauthUserRequest;
 import com.team.puddy.domain.user.dto.request.RegisterUserRequest;
 import com.team.puddy.domain.user.dto.response.ResponseUserInfoDto;
 import com.team.puddy.global.config.auth.KakaoUserDetails;
@@ -41,12 +42,13 @@ public interface UserMapper {
     @Mapping(target = "imagePath",source = "imagePath")
     ResponseUserInfoDto toDto(User user,String imagePath, boolean hasPet);
 
-    default User toEntity(OauthUserInfo user) {
+    default User toEntityFromOauth(OauthUserInfo user, OauthUserRequest oauthUserRequest) {
         return User.builder()
                 .account(user.sub())
                 .email(user.email())
                 .role(UserRole.USER.getRole())
-                .isNotificated(false)
+                .provider(JwtProvider.valueOf(oauthUserRequest.provider()))
+                .isNotificated(oauthUserRequest.isNotificated())
                 .nickname(createNickname())
                 .username(user.name()).build();
     }
