@@ -89,6 +89,26 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
         return new SliceImpl<>(articleList,pageable,hasNext);
     }
 
+    public Slice<Article> findArticleListByUserId(Long userId, Pageable pageable) {
+
+        List<Article> articleList = queryFactory.selectFrom(article).distinct()
+                .fetchJoin()
+                .where(user.id.eq(userId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize() + 1)
+                .orderBy(article.createdDate.desc())
+                .fetch();
+
+        boolean hasNext = articleList.size() > pageable.getPageSize();
+        if (hasNext) {
+            articleList.remove(articleList.size() - 1);
+        }
+
+
+        return new SliceImpl<>(articleList, pageable, hasNext);
+    }
+
+
     public List<Article> findPopularArticleList() {
         return queryFactory.selectFrom(article).distinct()
                 .leftJoin(article.user, user).fetchJoin()

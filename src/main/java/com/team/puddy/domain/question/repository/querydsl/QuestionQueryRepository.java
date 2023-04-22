@@ -19,7 +19,7 @@ public interface QuestionQueryRepository {
 
     Optional<Question> findByIdWithUser(Long questionId);
 
-    List<Question> findQuestionListByUserId(Long userId);
+    Slice<Question> findQuestionListByUserId(Long userId, Pageable pageable);
 
 
     Optional<Question> findQuestionForModify(Long questionId, Long userId);

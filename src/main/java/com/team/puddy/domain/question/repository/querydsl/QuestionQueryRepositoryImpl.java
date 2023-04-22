@@ -82,12 +82,23 @@ public class QuestionQueryRepositoryImpl implements QuestionQueryRepository {
                 .fetchOne());
     }
 
-    public List<Question> findQuestionListByUserId(Long userId) {
-        return queryFactory.selectFrom(question)
+    public Slice<Question> findQuestionListByUserId(Long userId, Pageable pageable) {
+        List<Question> questionList = queryFactory.selectFrom(question)
                 .innerJoin(question.user, user)
                 .fetchJoin()
                 .where(user.id.eq(userId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize() + 1)
+                .orderBy(question.createdDate.desc())
                 .fetch();
+
+        boolean hasNext = questionList.size() > pageable.getPageSize();
+        if (hasNext) {
+            questionList.remove(questionList.size() - 1);
+        }
+
+
+        return new SliceImpl<>(questionList, pageable, hasNext);
     }
 
     public Optional<Question> findQuestionForModify(Long questionId, Long userId) {

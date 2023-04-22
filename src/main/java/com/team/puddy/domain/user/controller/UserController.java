@@ -2,6 +2,8 @@ package com.team.puddy.domain.user.controller;
 
 
 
+import com.team.puddy.domain.article.dto.response.ResponseArticleExcludeCommentDto;
+import com.team.puddy.domain.question.dto.response.ResponseQuestionExcludeAnswerDto;
 import com.team.puddy.domain.user.dto.request.*;
 import com.team.puddy.domain.user.dto.response.ResponsePostDto;
 import com.team.puddy.domain.user.dto.response.ResponseUserInfoDto;
@@ -17,12 +19,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
 
 
 @Slf4j
@@ -68,9 +73,10 @@ public class UserController {
     }
 
     @GetMapping("/posts")
-    public Response<?> myPost(@AuthenticationPrincipal JwtUserDetails user) {
-
-        ResponsePostDto myPost = userService.getMyPost(user.getUserId());
+    public Response<?> myPost(@RequestParam("page") int page,@RequestParam(value = "type",defaultValue = "question") String type,
+                                @AuthenticationPrincipal JwtUserDetails user) {
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        ResponsePostDto myPost = userService.getMyPost(user.getUserId(), type, pageable);
         return Response.success(myPost);
     }
 

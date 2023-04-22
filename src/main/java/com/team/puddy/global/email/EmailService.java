@@ -98,7 +98,7 @@ public class EmailService {
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setFrom(fromAddress);
-            helper.setTo(findUser.getEmail());
+            helper.setTo("puddyofficial1@gmail.com");
             helper.setSubject("퍼디 문서 전송 메일입니다.");
             helper.setText("퍼디 문서 전송 메일입니다.");
             helper.addAttachment(Objects.requireNonNull(file.getOriginalFilename()), file);

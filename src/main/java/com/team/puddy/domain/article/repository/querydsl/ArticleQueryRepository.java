@@ -23,4 +23,6 @@ public interface ArticleQueryRepository {
     Slice<Article> findAllByTitleStartingWithOrderByCreatedDateAsc(String keyword, Pageable pageable);
 
     Slice<Article> findAllByTitleStartingWithOrderByViewCountDesc(String keyword, Pageable pageable);
+
+    Slice<Article> findArticleListByUserId(Long userId, Pageable page);
 }

@@ -4,6 +4,10 @@ import com.team.puddy.domain.answer.domain.Answer;
 import com.team.puddy.domain.answer.dto.ResponseAnswerDtoExcludeUser;
 import com.team.puddy.domain.answer.repository.AnswerRepository;
 import com.team.puddy.domain.answer.repository.querydsl.AnswerQueryRepository;
+import com.team.puddy.domain.article.domain.Article;
+import com.team.puddy.domain.article.dto.response.ResponseArticleExcludeCommentDto;
+import com.team.puddy.domain.article.repository.ArticleRepository;
+import com.team.puddy.domain.comment.repository.CommentRepository;
 import com.team.puddy.domain.image.domain.Image;
 import com.team.puddy.domain.image.service.ImageService;
 import com.team.puddy.domain.question.domain.Question;
@@ -22,12 +26,15 @@ import com.team.puddy.global.error.ErrorCode;
 import com.team.puddy.global.error.exception.BusinessException;
 import com.team.puddy.global.error.exception.NotFoundException;
 import com.team.puddy.global.mapper.AnswerMapper;
+import com.team.puddy.global.mapper.ArticleMapper;
 import com.team.puddy.global.mapper.QuestionMapper;
 import com.team.puddy.global.mapper.UserMapper;
 import com.team.puddy.global.config.security.jwt.JwtTokenUtils;
 import com.team.puddy.global.config.security.jwt.LoginToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,11 +54,11 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final QuestionRepository questionRepository;
-    private final AnswerRepository answerRepository;
+    private final ArticleRepository articleRepository;
 
     private final QuestionMapper questionMapper;
-    private final AnswerMapper answerMapper;
     private final UserMapper userMapper;
+    private final ArticleMapper articleMapper;
     private final ImageService imageService;
 
 
@@ -128,18 +135,21 @@ public class UserService {
         findUser.updateAuth();
     }
 
+
     @Transactional(readOnly = true)
-    public ResponsePostDto getMyPost(Long userId) {
-        List<Question> questionList = questionRepository.findQuestionListByUserId(userId);
-        List<Answer> answerList = answerRepository.findAnswerListByUserId(userId);
-
-        List<ResponseQuestionExcludeAnswerDto> questionDtoList = questionList.stream().map(questionMapper::toDto).toList();
-        List<ResponseAnswerDtoExcludeUser> answerDtoList = answerList.stream().map(answerMapper::toDto).toList();
-
-        return ResponsePostDto.builder()
-                .questionList(questionDtoList)
-                .answerList(answerDtoList).build();
+    public List<ResponseQuestionExcludeAnswerDto> getMyQuestion(Long userId, Pageable page) {
+        Slice<Question> questionList = questionRepository.findQuestionListByUserId(userId,page);
+        return questionList.stream().map(questionMapper::toDto).toList();
     }
+
+    @Transactional(readOnly = true)
+    public List<ResponseArticleExcludeCommentDto> getMyArticle(Long userId, Pageable page) {
+        Slice<Article> articleList = articleRepository.findArticleListByUserId(userId,page);
+        return articleList.stream().map(articleMapper::toExcludeImageDto).toList();
+    }
+
+
+
 
     @Transactional(readOnly = true)
     public void duplicateEmailCheck(String email) {
@@ -187,6 +197,22 @@ public class UserService {
         findUser.updatePassword(passwordEncoder.encode(password));
     }
 
-
-
+    @Transactional(readOnly = true)
+    public ResponsePostDto getMyPost(Long userId, String type, Pageable pageable) {
+        return switch(type) {
+            case "question" -> {
+                Slice<Question> questionSlice = questionRepository.findQuestionListByUserId(userId, pageable);
+                List<ResponseQuestionExcludeAnswerDto> questionList = questionSlice.stream().map(questionMapper::toDto).toList();
+                yield ResponsePostDto.builder()
+                        .questionList(questionList).build();
+            }
+            case "article" -> {
+                Slice<Article> articleSlice = articleRepository.findArticleListByUserId(userId, pageable);
+                List<ResponseArticleExcludeCommentDto> articleList = articleSlice.stream().map(articleMapper::toExcludeImageDto).toList();
+                yield ResponsePostDto.builder()
+                        .articleList(articleList).build();
+            }
+            default -> throw new IllegalArgumentException("Invalid type: " + type);
+        };
+    }
 }

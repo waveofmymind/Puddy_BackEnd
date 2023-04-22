@@ -59,6 +59,20 @@ public interface ArticleMapper {
                 .tagList(article.getTagList())
                 .postCategory(article.getPostCategory()).build();
     }
+
+    default ResponseArticleExcludeCommentDto toExcludeImageDto(Article article) {
+        return ResponseArticleExcludeCommentDto.builder()
+                .articleId(article.getId())
+                .title(article.getTitle())
+                .nickname(article.getUser().getNickname())
+                .content(article.getContent())
+                .viewCount(article.getViewCount())
+                .likeCount(0)
+                .imagePath(null)
+                .createdDate(article.getCreatedDate())
+                .tagList(article.getTagList())
+                .postCategory(article.getPostCategory()).build();
+    }
     default ResponseArticleListDto toDto (List<ResponseArticleExcludeCommentDto> articleList, boolean hasNextPage) {
         return ResponseArticleListDto.builder()
                 .articleList(articleList)
