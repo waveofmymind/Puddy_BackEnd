@@ -65,3 +65,5 @@
 
 ## [회의 기록 노션](https://puddy.notion.site/PUDDY-cbab6d6425cd4103b9461eff301ca7e5)
 
+## [회고](https://waveofymymind.tistory.com/120)
+
