@@ -4,6 +4,8 @@ import com.team.puddy.domain.TestEntityUtils;
 
 import com.team.puddy.domain.answer.domain.Answer;
 import com.team.puddy.domain.answer.repository.AnswerRepository;
+import com.team.puddy.domain.article.domain.Article;
+import com.team.puddy.domain.article.repository.ArticleRepository;
 import com.team.puddy.domain.question.domain.Question;
 import com.team.puddy.domain.question.repository.QuestionRepository;
 import com.team.puddy.domain.user.domain.User;
@@ -18,6 +20,7 @@ import com.team.puddy.global.config.security.jwt.LoginToken;
 import com.team.puddy.global.error.exception.BusinessException;
 import com.team.puddy.global.error.exception.NotFoundException;
 import com.team.puddy.global.mapper.AnswerMapper;
+import com.team.puddy.global.mapper.ArticleMapper;
 import com.team.puddy.global.mapper.QuestionMapper;
 import com.team.puddy.global.mapper.UserMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +29,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
@@ -47,9 +54,13 @@ public class UserServiceTest {
     @Mock private UserMapper userMapper;
     @Mock private PasswordEncoder passwordEncoder;
     @Mock private QuestionRepository questionRepository;
+
+    @Mock private ArticleRepository articleRepository;
     @Mock private AnswerRepository answerRepository;
     @Mock private QuestionMapper questionMapper;
     @Mock private AnswerMapper answerMapper;
+
+    @Mock private ArticleMapper articleMapper;
 
 
 
@@ -136,30 +147,26 @@ public class UserServiceTest {
         verify(userRepository).findByAccount(user.getAccount());
         verify(jwtTokenUtils).createLoginToken(user);
     }
-    @DisplayName("내 게시글 보기 성공 테스트")
+    @DisplayName("내 질문글 보기 성공 테스트")
     @Test
-    public void givenNothing_whenGetPosts_thenOK() {
+    public void givenRequestQuestion_whenGetPosts_thenOK() {
 
         Long userId = 1L;
         List<Question> questionList = List.of(TestEntityUtils.question(TestEntityUtils.user()));
-        List<Answer> answerList = List.of(TestEntityUtils.answer());
+        Pageable pageable = PageRequest.of(0, 10);
+        Slice<Question> questionSlice = new SliceImpl<>(questionList,pageable,false);
+        when(questionRepository.findQuestionListByUserId(userId,pageable)).thenReturn(questionSlice);
 
-        when(questionRepository.findQuestionListByUserId(userId)).thenReturn(questionList);
-        when(answerRepository.findAnswerListByUserId(userId)).thenReturn(answerList);
+        userService.getMyPost(userId,"question",pageable);
 
-        userService.getMyPost(userId);
-
-        verify(questionRepository).findQuestionListByUserId(userId);
-        verify(answerRepository).findAnswerListByUserId(userId);
+        verify(questionRepository).findQuestionListByUserId(userId,pageable);
 
         for (Question question : questionList) {
             verify(questionMapper).toDto(question);
         }
 
-        for (Answer answer : answerList) {
-            verify(answerMapper).toDto(answer);
-        }
     }
+
     @DisplayName("권한 업데이트 성공 테스트")
     @Test
     public void whenRequest_whenUpdateAuth_thenOK() {

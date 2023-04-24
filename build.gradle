@@ -1,122 +1,138 @@
-
 buildscript {
-	ext {
-		queryDslVersion = "5.0.0"
-	}
-}
+    ext {
+        queryDslVersion = "5.0.0"
+        restdocsApiSpecVersion = '0.16.2'
 
+
+    }
+}
 
 
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '2.7.9'
-	id 'io.spring.dependency-management' version '1.1.0'
-	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+    id 'java'
+    id 'org.springframework.boot' version '2.7.9'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+    id 'org.hidetake.swagger.generator' version '2.18.2'
+    id 'com.epages.restdocs-api-spec' version "${restdocsApiSpecVersion}"
+
 
 }
+
 
 group = 'com.team'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
+
+openapi3 {
+    setServer("http://localhost:8080")
+    title = "restdocs-swagger API Documentation"
+    description = "Spring REST Docs with SwaggerUI."
+    version = "0.0.1"
+    format = "yaml"
+    }
 
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	//monitoring
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    //monitoring
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
 
-	runtimeOnly 'com.mysql:mysql-connector-j'
+    runtimeOnly 'com.mysql:mysql-connector-j'
 
-	//Security
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	testImplementation 'org.springframework.security:spring-security-test'
+    //Security
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
 
-	//querydsl
+    //querydsl
 //	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.8.0'
-	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
-	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
-	implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
-	//Lombok & Mapstruct
-	implementation 'org.projectlombok:lombok:1.18.24'
-	implementation 'org.mapstruct:mapstruct:1.5.3.Final'
-	implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    //Lombok & Mapstruct
+    implementation 'org.projectlombok:lombok:1.18.24'
+    implementation 'org.mapstruct:mapstruct:1.5.3.Final'
+    implementation 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
-	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
-	annotationProcessor 'org.projectlombok:lombok:1.18.24'
-	//validation
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    //validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-	//Swagger UI
-	implementation 'org.springdoc:springdoc-openapi-ui:1.6.12'
+    implementation 'com.github.lwaddicor:spring-startup-analysis:1.1.0'
 
-	//token
-	implementation 'com.auth0:java-jwt:3.18.3'
-	implementation 'io.jsonwebtoken:jjwt:0.9.1'
-	implementation 'com.nimbusds:nimbus-jose-jwt:9.31'
+    //Spring Rest Docs + Swagger UI
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.12'
+    testImplementation 'io.rest-assured:rest-assured'
+    testImplementation "com.epages:restdocs-api-spec-restassured:${restdocsApiSpecVersion}"
+    //token
+    implementation 'com.auth0:java-jwt:3.18.3'
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'com.nimbusds:nimbus-jose-jwt:9.31'
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	//Redis
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    //Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-	//email
-	implementation 'org.springframework.boot:spring-boot-starter-mail'
-
-
-	//S3
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+    //email
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 
 
+    //S3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+    swaggerUI 'org.webjars:swagger-ui:4.11.1'
 
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 // 추가
 jar {
-	enabled = false
+    enabled = false
 }
 
 clean {
-	delete file('src/main/generated') // 인텔리제이 Annotation processor 생성물 생성 위치
+    delete file('src/main/generated') // 인텔리제이 Annotation processor 생성물 생성 위치
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
 
 querydsl {
-	jpa = true
-	querydslSourcesDir = querydslDir
+    jpa = true
+    querydslSourcesDir = querydslDir
 }
 
 sourceSets {
-	main.java.srcDir querydslDir
+    main.java.srcDir querydslDir
 }
 
 compileQuerydsl {
-	options.annotationProcessorPath = configurations.querydsl
+    options.annotationProcessorPath = configurations.querydsl
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-	querydsl.extendsFrom compileClasspath
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
 }
 

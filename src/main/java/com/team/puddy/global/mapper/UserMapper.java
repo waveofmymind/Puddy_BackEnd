@@ -40,7 +40,7 @@ public interface UserMapper {
                 .build();
     }
     @Mapping(target = "imagePath",source = "imagePath")
-    ResponseUserInfoDto toDto(User user,String imagePath, boolean hasPet);
+    ResponseUserInfoDto toDto(User user,String imagePath, boolean hasPet, boolean hasExpertInfo);
 
     default User toEntityFromOauth(OauthUserInfo user, OauthUserRequest oauthUserRequest) {
         return User.builder()

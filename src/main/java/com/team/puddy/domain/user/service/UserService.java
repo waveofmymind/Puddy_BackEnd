@@ -113,11 +113,12 @@ public class UserService {
     public ResponseUserInfoDto getUserInfo(Long userId) {
         User findUser = userRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         Image userImage = findUser.getImage();
+        boolean hasExpertInfo = findUser.getExpert() != null;
         boolean hasPet = findUser.getPet() != null;
         if (userImage == null) { // 해당 유저의 이미지가 없는 경우
-            return userMapper.toDto(findUser,"",hasPet);
+            return userMapper.toDto(findUser,"",hasPet,hasExpertInfo);
         }
-        return userMapper.toDto(findUser, userImage.getImagePath(),hasPet);
+        return userMapper.toDto(findUser, userImage.getImagePath(),hasPet,hasExpertInfo);
     }
 
 

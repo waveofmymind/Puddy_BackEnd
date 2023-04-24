@@ -73,7 +73,7 @@ public class UserController {
     }
 
     @GetMapping("/posts")
-    public Response<?> myPost(@RequestParam("page") int page,@RequestParam(value = "type",defaultValue = "question") String type,
+    public Response<?> myPost(@RequestParam(value = "page",required = true) int page,@RequestParam(value = "type",defaultValue = "question") String type,
                                 @AuthenticationPrincipal JwtUserDetails user) {
         Pageable pageable = PageRequest.of(page - 1, 10);
         ResponsePostDto myPost = userService.getMyPost(user.getUserId(), type, pageable);

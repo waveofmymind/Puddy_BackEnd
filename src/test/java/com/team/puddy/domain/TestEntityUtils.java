@@ -8,6 +8,7 @@ import com.team.puddy.domain.article.domain.Article;
 import com.team.puddy.domain.article.dto.request.RequestArticleDto;
 import com.team.puddy.domain.article.dto.request.UpdateArticleDto;
 import com.team.puddy.domain.article.dto.response.ResponseArticleDto;
+import com.team.puddy.domain.article.dto.response.ResponseArticleExcludeCommentDto;
 import com.team.puddy.domain.comment.domain.Comment;
 import com.team.puddy.domain.comment.dto.request.RequestCommentDto;
 import com.team.puddy.domain.comment.dto.request.UpdateCommentDto;
@@ -44,6 +45,8 @@ import org.springframework.data.domain.*;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 public class TestEntityUtils {
@@ -396,7 +399,7 @@ public class TestEntityUtils {
     public static ResponsePostDto responsePostDto() {
         return ResponsePostDto.builder()
                 .questionList(questionList())
-                .answerList(answerList()).build();
+                .build();
 
     }
 
@@ -420,5 +423,18 @@ public class TestEntityUtils {
                 .hasPet(true)
                 .imagePath("ssss")
                 .nickname("nickname").build();
+    }
+
+    public static ResponseArticleExcludeCommentDto articleDto() {
+        return ResponseArticleExcludeCommentDto.builder()
+                .articleId(1L)
+                .likeCount(0)
+                .nickname("22")
+                .postCategory(2)
+                .tagList(Collections.emptyList())
+                .title("제목")
+                .viewCount(0)
+                .createdDate(LocalDateTime.now())
+                .content("내용").build();
     }
 }

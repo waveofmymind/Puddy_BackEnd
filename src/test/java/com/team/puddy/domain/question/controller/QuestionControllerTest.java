@@ -1,18 +1,14 @@
 package com.team.puddy.domain.question.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.team.puddy.domain.ControllerTest;
 import com.team.puddy.domain.TestEntityUtils;
 import com.team.puddy.domain.question.dto.request.RequestQuestionDto;
 import com.team.puddy.domain.question.dto.request.UpdateQuestionDto;
 import com.team.puddy.domain.question.dto.response.QuestionListResponseDto;
 import com.team.puddy.domain.question.dto.response.QuestionResponseDto;
 import com.team.puddy.domain.question.service.QuestionService;
-import com.team.puddy.domain.user.controller.UserController;
-import com.team.puddy.domain.user.service.UserService;
-import com.team.puddy.global.common.dto.Response;
 import com.team.puddy.global.config.WithMockAuthUser;
-import com.team.puddy.global.config.auth.JwtUserDetails;
 import com.team.puddy.global.config.security.SecurityConfig;
 import com.team.puddy.global.config.security.jwt.JwtAuthorizationFilter;
 import com.team.puddy.global.config.security.jwt.JwtVerifier;
@@ -28,25 +24,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockPart;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 
 import java.util.List;
 
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -57,16 +51,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtVerifier.class)
         })
 @DisplayName("질문글 API 테스트")
-public class QuestionControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @MockBean
-    private QuestionService questionService;
+public class QuestionControllerTest extends ControllerTest {
 
     @DisplayName("질문글 작성 API")
     @Test
@@ -194,4 +180,8 @@ public class QuestionControllerTest {
 
         verify(questionService, times(1)).getQuestionListByTitleStartWith(any(Pageable.class), eq(keyword),eq(sort));
     }
+
+
+
+
 }

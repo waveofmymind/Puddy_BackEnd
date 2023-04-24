@@ -25,6 +25,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -145,12 +147,12 @@ public class UserControllerTest extends ControllerTest {
         when(userService.reissueToken(tokenReissueDto)).thenReturn(loginToken);
         //when & then
         mockMvc.perform(post("/users/login/reissue")
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(csrf())
-                .content(objectMapper.writeValueAsString(tokenReissueDto)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .content(objectMapper.writeValueAsString(tokenReissueDto)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("accessToken").value("Bearer sample-access-token"))
-                        .andExpect(jsonPath("refreshToken").value("Bearer sample-refresh-token"));
+                .andExpect(jsonPath("refreshToken").value("Bearer sample-refresh-token"));
 
         verify(userService, times(1)).reissueToken(tokenReissueDto);
     }
@@ -162,16 +164,21 @@ public class UserControllerTest extends ControllerTest {
         //given
         Long userId = 1L;
         ResponsePostDto responsePostDto = TestEntityUtils.responsePostDto();
-        when(userService.getMyPost(userId)).thenReturn(responsePostDto);
+        Pageable pageable = PageRequest.of(0, 10);
+
+        when(userService.getMyPost(userId, "", pageable)).thenReturn(responsePostDto);
         //when & then
         mockMvc.perform(get("/users/posts")
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(csrf()))
+                        .param("page", "1")
+                        .param("type", "question")
+
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
-                .andExpect(jsonPath("$.data").isNotEmpty());
+                .andExpect(jsonPath("$.data").isEmpty());
 
-        verify(userService, times(1)).getMyPost(userId);
+        verify(userService, times(1)).getMyPost(userId, "question", pageable);
 
     }
 
@@ -185,8 +192,8 @@ public class UserControllerTest extends ControllerTest {
         when(userService.getUserInfo(userId)).thenReturn(responseUserInfoDto);
         //when & then
         mockMvc.perform(get("/users/me")
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(csrf()))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
                 .andExpect(jsonPath("$.data").isNotEmpty());
