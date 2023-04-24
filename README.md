@@ -47,9 +47,9 @@
 
 [API 명세서](https://documenter.getpostman.com/view/23164315/2s93RMVFEm#22ba6470-2481-40e0-a70f-dbf2b4361306)
 
-## 테스트 기록
+## 단위 테스트 및 통합 테스트
 
-![image](https://user-images.githubusercontent.com/93868431/232841335-996452fc-32f3-44cd-a6a5-89bf806d6ef1.png)
+![image](https://user-images.githubusercontent.com/93868431/234045897-7dfadc33-c6a7-41e5-a9d8-6fcdf492186d.png)
 
 ## 트러블 슈팅 및 기술적 도전
 
