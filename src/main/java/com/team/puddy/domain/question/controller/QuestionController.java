@@ -8,6 +8,7 @@ import com.team.puddy.domain.question.dto.request.UpdateQuestionDto;
 import com.team.puddy.domain.question.service.QuestionService;
 import com.team.puddy.global.common.dto.Response;
 import com.team.puddy.global.config.auth.JwtUserDetails;
+import com.team.puddy.global.mapper.QuestionMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,12 +31,14 @@ public class QuestionController {
 
     private final QuestionService questionService;
 
+    private final QuestionMapper questionMapper;
+
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary = "QNA 게시글 등록 메서드")
-    public Response<?> registerQuestion(@RequestPart("request") RequestQuestionDto requestDto,
+    public Response<?> registerQuestion(@RequestPart("request") RequestQuestionDto request,
                                         @RequestPart(value = "images", required = false) List<MultipartFile> images,
                                         @AuthenticationPrincipal JwtUserDetails user) {
-        questionService.addQuestion(requestDto, images, user.getUserId());
+        questionService.addQuestion(questionMapper.toServiceDto(request), images, user.getUserId());
 
         return Response.success();
     }

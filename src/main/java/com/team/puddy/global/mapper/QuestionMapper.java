@@ -4,6 +4,7 @@ import com.team.puddy.domain.answer.dto.ResponseAnswerDto;
 import com.team.puddy.domain.image.domain.Image;
 import com.team.puddy.domain.pet.domain.Pet;
 import com.team.puddy.domain.question.domain.Question;
+import com.team.puddy.domain.question.dto.request.QuestionServiceRegister;
 import com.team.puddy.domain.question.dto.request.RequestQuestionDto;
 import com.team.puddy.domain.question.dto.response.QuestionListResponseDto;
 import com.team.puddy.domain.question.dto.response.QuestionResponseDto;
@@ -25,7 +26,9 @@ public interface QuestionMapper {
     @Mapping(target = "imageList", source = "imageList")
     @Mapping(target = "answerList", ignore = true)
     @Mapping(target = "isSolved", ignore = true)
-    Question toEntity(RequestQuestionDto requestDto, List<Image> imageList, User user);
+    Question toEntity(QuestionServiceRegister request, List<Image> imageList, User user);
+
+    QuestionServiceRegister toServiceDto(RequestQuestionDto requestDto);
 
 
     default ResponseQuestionExcludeAnswerDto toDto(Question question) {

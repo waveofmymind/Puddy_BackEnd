@@ -33,6 +33,7 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
                         .leftJoin(user.pet,pet).fetchJoin()
                         .leftJoin(user.expert,expert).fetchJoin()
                         .leftJoin(article.commentList,comment).fetchJoin()
+                        .leftJoin(comment.user, user).fetchJoin()
                         .where(article.id.eq(articleId))
                         .fetchOne());
     }

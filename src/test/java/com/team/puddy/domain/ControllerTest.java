@@ -14,7 +14,9 @@ import com.team.puddy.domain.user.service.UserService;
 import com.team.puddy.global.config.security.SecurityConfig;
 import com.team.puddy.global.config.security.jwt.JwtAuthorizationFilter;
 import com.team.puddy.global.config.security.jwt.JwtVerifier;
+import com.team.puddy.global.mapper.QuestionMapper;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -49,6 +51,9 @@ public abstract class ControllerTest {
 
     @MockBean
     public UserService userService;
+
+    @MockBean
+    public QuestionMapper questionMapper;
 
     @MockBean
     public QuestionService questionService;

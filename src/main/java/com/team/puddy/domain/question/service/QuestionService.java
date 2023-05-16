@@ -4,6 +4,7 @@ import com.team.puddy.domain.image.domain.Image;
 import com.team.puddy.domain.image.service.ImageService;
 import com.team.puddy.domain.pet.domain.Pet;
 import com.team.puddy.domain.question.domain.Question;
+import com.team.puddy.domain.question.dto.request.QuestionServiceRegister;
 import com.team.puddy.domain.question.dto.request.RequestQuestionDto;
 import com.team.puddy.domain.question.dto.response.QuestionListResponseDto;
 import com.team.puddy.domain.question.dto.response.QuestionResponseDto;
@@ -18,6 +19,7 @@ import com.team.puddy.global.mapper.AnswerMapper;
 import com.team.puddy.global.mapper.QuestionMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,7 @@ import java.util.List;
 @Transactional
 @Slf4j
 public class QuestionService {
+
 
     private final QuestionRepository questionRepository;
 
@@ -97,12 +100,12 @@ public class QuestionService {
     }
 
     @Transactional
-    public void addQuestion(RequestQuestionDto requestDto, List<MultipartFile> images, Long userId) {
+    public void addQuestion(QuestionServiceRegister request, List<MultipartFile> images, Long userId) {
         User findUser = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.USER_NOT_FOUND));
 
         List<Image> imageList = imageService.saveImageListForQuestion(images);
 
-        Question question = questionMapper.toEntity(requestDto, imageList, findUser);
+        Question question = questionMapper.toEntity(request, imageList, findUser);
         questionRepository.save(question);
 
     }

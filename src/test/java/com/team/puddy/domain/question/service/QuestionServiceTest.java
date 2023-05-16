@@ -2,7 +2,9 @@ package com.team.puddy.domain.question.service;
 
 import com.team.puddy.domain.TestEntityUtils;
 import com.team.puddy.domain.image.service.ImageService;
+import com.team.puddy.domain.question.QuestionFixture;
 import com.team.puddy.domain.question.domain.Question;
+import com.team.puddy.domain.question.dto.request.QuestionServiceRegister;
 import com.team.puddy.domain.question.dto.request.RequestQuestionDto;
 
 import com.team.puddy.domain.question.dto.response.ResponseQuestionExcludeAnswerDto;
@@ -44,23 +46,23 @@ public class QuestionServiceTest {
     @Mock
     private ImageService imageService;
 
-    @DisplayName("문제 등록 테스트")
+    @DisplayName("질문글을 등록할 수 있다.")
     @Test
-    void givenRequestDto_whenAddQuestion_thenSuccess() throws IOException {
+    void givenRequestDto_whenAddQuestion_thenSuccess() {
         //given
         User user = TestEntityUtils.user();
-        RequestQuestionDto requestDto = TestEntityUtils.requestQuestionDto();
+        QuestionServiceRegister request = QuestionFixture.questionServiceRegister();
         Question question = TestEntityUtils.question(user);
         given(userRepository.findById(any(Long.class))).willReturn(Optional.ofNullable(user));
-        given(questionMapper.toEntity(any(RequestQuestionDto.class),any(List.class),any(User.class))).willReturn(question);
+        given(questionMapper.toEntity(any(QuestionServiceRegister.class),any(List.class),any(User.class))).willReturn(question);
         //when
-        questionService.addQuestion(requestDto,Collections.emptyList(), Objects.requireNonNull(user).getId());
+        questionService.addQuestion(request,Collections.emptyList(), Objects.requireNonNull(user).getId());
 
         //then
         verify(questionRepository).save(any());
     }
 
-    @DisplayName("문제 목록 조회 테스트")
+    @DisplayName("질문글을 리스트로 조회할 수 있다.")
     @Test
     void givenPage_whenGetQuestionList_thenSuccess() {
         //given
@@ -77,7 +79,7 @@ public class QuestionServiceTest {
         verify(questionRepository).findByTitleStartWithOrderByCreatedDateDesc(page,"");
     }
 
-    @DisplayName("문제 전체 개수 조회 테스트")
+    @DisplayName("질문글의 총 개수를 조회할 수 있다.")
     @Test
     void givenNothing_whenGetCount_then200() {
         //given
@@ -88,7 +90,7 @@ public class QuestionServiceTest {
         verify(questionRepository).count();
     }
 
-    @DisplayName("질문글 단건 조회 테스트")
+    @DisplayName("id로 특정 질문글을 조회할 수 있다.")
     @Test
     void givenQuestionId_whenGetQuestion_thenQuestionResponseDto() {
         Long questionId = 2L;

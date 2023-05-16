@@ -1,13 +1,13 @@
 package com.team.puddy.domain.question.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team.puddy.domain.ControllerTest;
 import com.team.puddy.domain.TestEntityUtils;
+import com.team.puddy.domain.question.QuestionFixture;
+import com.team.puddy.domain.question.dto.request.QuestionServiceRegister;
 import com.team.puddy.domain.question.dto.request.RequestQuestionDto;
 import com.team.puddy.domain.question.dto.request.UpdateQuestionDto;
 import com.team.puddy.domain.question.dto.response.QuestionListResponseDto;
 import com.team.puddy.domain.question.dto.response.QuestionResponseDto;
-import com.team.puddy.domain.question.service.QuestionService;
 import com.team.puddy.global.config.WithMockAuthUser;
 import com.team.puddy.global.config.security.SecurityConfig;
 import com.team.puddy.global.config.security.jwt.JwtAuthorizationFilter;
@@ -15,9 +15,7 @@ import com.team.puddy.global.config.security.jwt.JwtVerifier;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Pageable;
@@ -26,12 +24,10 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockPart;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
 
 
 import java.util.List;
 
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.*;
@@ -61,10 +57,12 @@ public class QuestionControllerTest extends ControllerTest {
         // given
         Long userId = 1L;
         RequestQuestionDto requestQuestionDto = TestEntityUtils.requestQuestionDto();
+        QuestionServiceRegister request = QuestionFixture.questionServiceRegister();
 
         MockMultipartFile image = TestEntityUtils.mockMultipartFile();
 
-        doNothing().when(questionService).addQuestion(requestQuestionDto, List.of(image), userId);
+        when(questionMapper.toServiceDto(requestQuestionDto)).thenReturn(request);
+        doNothing().when(questionService).addQuestion(request, List.of(image), userId);
 
         MockPart requestPart = new MockPart("request", objectMapper.writeValueAsString(requestQuestionDto).getBytes());
         requestPart.getHeaders().setContentType(MediaType.APPLICATION_JSON);
@@ -77,7 +75,7 @@ public class QuestionControllerTest extends ControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultCode").value("SUCCESS"));
 
-        verify(questionService, times(1)).addQuestion(requestQuestionDto, List.of(image), userId);
+        verify(questionService, times(1)).addQuestion(request, List.of(image), userId);
     }
 
     @DisplayName("질문글 수정 API")
