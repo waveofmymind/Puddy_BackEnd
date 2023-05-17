@@ -55,11 +55,11 @@
 
 - [조회수 동시성 문제 해결하기](https://waveofymymind.tistory.com/108)
 
-- [일대일 연관관계에서의 지연로딩 트레이트 오프](https://waveofymymind.tistory.com/112)
+- [일대일 연관관계에서의 지연로딩 고려하기](https://waveofymymind.tistory.com/112)
 
 - [Redis 캐시를 사용한 JWT 리프레시 토큰 관리하기](https://waveofymymind.tistory.com/113)
 
-- [JPA N+1 해결하기](https://waveofymymind.tistory.com/114)
+- [JPA N+1 해결하기] (https://waveofymymind.tistory.com/114)
 
 - [WebMvcTest에서 발생하는 SpringSecurity 의존성 문제 해결하기](https://waveofymymind.tistory.com/117)
 
