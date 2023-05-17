@@ -59,7 +59,7 @@
 
 - [Redis 캐시를 사용한 JWT 리프레시 토큰 관리하기](https://waveofymymind.tistory.com/113)
 
-- [JPA N+1 해결하기] (https://waveofymymind.tistory.com/114)
+- [JPA N+1 해결하기](https://waveofymymind.tistory.com/114)
 
 - [WebMvcTest에서 발생하는 SpringSecurity 의존성 문제 해결하기](https://waveofymymind.tistory.com/117)
 
