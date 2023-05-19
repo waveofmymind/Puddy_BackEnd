@@ -11,7 +11,9 @@ import com.team.puddy.domain.question.dto.response.ResponseQuestionExcludeAnswer
 import com.team.puddy.domain.question.repository.QuestionRepository;
 import com.team.puddy.domain.user.domain.User;
 import com.team.puddy.domain.user.repository.UserRepository;
+import com.team.puddy.global.error.ErrorCode;
 import com.team.puddy.global.error.exception.EntityNotFoundException;
+import com.team.puddy.global.error.exception.NotFoundException;
 import com.team.puddy.global.mapper.AnswerMapper;
 import com.team.puddy.global.mapper.QuestionMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -26,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.*;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -54,9 +57,9 @@ public class QuestionServiceTest {
         QuestionServiceRegister request = QuestionFixture.questionServiceRegister();
         Question question = TestEntityUtils.question(user);
         given(userRepository.findById(any(Long.class))).willReturn(Optional.ofNullable(user));
-        given(questionMapper.toEntity(any(QuestionServiceRegister.class),any(List.class),any(User.class))).willReturn(question);
+        given(questionMapper.toEntity(any(QuestionServiceRegister.class), any(List.class), any(User.class))).willReturn(question);
         //when
-        questionService.addQuestion(request,Collections.emptyList(), Objects.requireNonNull(user).getId());
+        questionService.addQuestion(request, Collections.emptyList(), Objects.requireNonNull(user).getId());
 
         //then
         verify(questionRepository).save(any());
@@ -72,11 +75,11 @@ public class QuestionServiceTest {
         Page<Question> questionPage = new PageImpl<>(Collections.singletonList(
                 TestEntityUtils.question(user)
         ));
-        given(questionRepository.findByTitleStartWithOrderByCreatedDateDesc(any(),any(String.class))).willReturn(questionPage);
+        given(questionRepository.findByTitleStartWithOrderByCreatedDateDesc(any(), any(String.class))).willReturn(questionPage);
         //when
-        questionService.getQuestionListByTitleStartWith(page,"","desc");
+        questionService.getQuestionListByTitleStartWith(page, "", "desc");
         //then
-        verify(questionRepository).findByTitleStartWithOrderByCreatedDateDesc(page,"");
+        verify(questionRepository).findByTitleStartWithOrderByCreatedDateDesc(page, "");
     }
 
     @DisplayName("질문글의 총 개수를 조회할 수 있다.")
@@ -90,7 +93,7 @@ public class QuestionServiceTest {
         verify(questionRepository).count();
     }
 
-    @DisplayName("id로 특정 질문글을 조회할 수 있다.")
+    @DisplayName("특정 질문글을 조회할 수 있다.")
     @Test
     void givenQuestionId_whenGetQuestion_thenQuestionResponseDto() {
         Long questionId = 2L;
@@ -105,7 +108,7 @@ public class QuestionServiceTest {
 
     }
 
-    @DisplayName("조회수 증가 테스트")
+    @DisplayName("질문글 조회시 질문글 조회수가 1만큼 증가한다.")
     @Test
     void givenQuestionId_whenIncreaseViewCount_then200() {
         //given
@@ -118,8 +121,15 @@ public class QuestionServiceTest {
 
     }
 
+    @DisplayName("존재하지 않는 질문글의 조회수를 증가시키려 하면 예외가 발생한다.")
+    @Test
+    void givenNonExistQuestionId_whenIncreaseViewCount_thenThrowsNotFoundException() {
+        //given
+        Long nonExistentQuestionId = 100L;
+        given(questionRepository.existsById(any(Long.class))).willReturn(false);
 
-
-
-
+        //when & then
+        assertThatThrownBy(() -> questionService.increaseViewCount(nonExistentQuestionId))
+                .isInstanceOf(NotFoundException.class);
+    }
 }

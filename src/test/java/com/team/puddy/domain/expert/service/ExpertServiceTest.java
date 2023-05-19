@@ -7,6 +7,7 @@ import com.team.puddy.domain.expert.dto.ResponseExpertDto;
 import com.team.puddy.domain.expert.repository.ExpertRepository;
 import com.team.puddy.domain.user.domain.User;
 import com.team.puddy.domain.user.repository.UserRepository;
+import com.team.puddy.global.error.exception.user.DuplicateException;
 import com.team.puddy.global.mapper.ExpertMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,6 +19,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -37,7 +40,7 @@ public class ExpertServiceTest {
     @InjectMocks
     private ExpertService expertService;
 
-    @DisplayName("전문가 등록 테스트")
+    @DisplayName("전문가 권한을 가진 유저는 전문가 등록이 가능하다.")
     @Test
     void givenRequest_whenRegisterExpert_thenOK() {
 
@@ -57,7 +60,10 @@ public class ExpertServiceTest {
         verify(expertRepository).save(expert);
     }
 
-    @DisplayName("전문가 조회 테스트")
+
+
+
+    @DisplayName("유효한 전문가 id로 전문가 조회시 성공한다.")
     @Test
     public void givenUserId_whenFindExpert_thenOK() {
 

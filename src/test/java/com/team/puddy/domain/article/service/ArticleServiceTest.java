@@ -85,7 +85,7 @@ class ArticleServiceTest {
                 new MockMultipartFile("image2", new byte[0])
         );
     }
-    @DisplayName("게시글 등록 테스트")
+    @DisplayName("필수 정보로 게시글 작성시 성공한다.")
     @Test
     void givenRequest_whenAddArticle_thenOK() {
         // Given
@@ -105,7 +105,7 @@ class ArticleServiceTest {
         verify(tagRepository, times(requestDto.tagList().size())).findByTagName(anyString());
         verify(articleRepository, times(1)).save(any(Article.class));
     }
-    @DisplayName("게시글 조회 테스트")
+    @DisplayName("유효한 게시글 id로 게시글 조회시 성공한다.")
     @Test
     void givenArticleId_whenGetArticle_thenOK() {
         // Given
@@ -126,7 +126,7 @@ class ArticleServiceTest {
         verify(likeRepository, times(1)).countByArticleId(articleId);
         verify(articleMapper, times(1)).toDto(anyLong(), anyBoolean(), any(Article.class), anyList());
     }
-    @DisplayName("게시글 조회시 예외 테스트")
+    @DisplayName("유효하지 않은 게시글 id로 게시글 조회시 예외가 발생한다.")
     @Test
     void givenArticleId_whenGetArticle_then400() {
         // Given
@@ -141,7 +141,7 @@ class ArticleServiceTest {
         verify(articleRepository, times(1)).findArticleWithUserById(articleId);
     }
 
-    @DisplayName("게시글 수정 테스트")
+    @DisplayName("필수 정보로 게시글 수정시 성공한다.")
     @Test
     void givenUpdate_whenUpdateArticle_thenOK() {
         // Given
@@ -160,7 +160,7 @@ class ArticleServiceTest {
         verify(articleTagRepository, times(1)).deleteByArticleId(articleId);
         verify(article, times(1)).updateArticle(eq(updateDto.title()), eq(updateDto.content()), anyList());
     }
-    @DisplayName("게시글 삭제시 성공 테스트")
+    @DisplayName("유효한 게시글 id로 삭제시 성공한다")
     @Test
     void givenArticleId_whenDeleteArticle_thenOK() {
         // given
@@ -179,4 +179,5 @@ class ArticleServiceTest {
         verify(articleTagRepository, times(1)).deleteByArticleId(articleId);
         verify(articleRepository, times(1)).deleteById(articleId);
     }
+
 }

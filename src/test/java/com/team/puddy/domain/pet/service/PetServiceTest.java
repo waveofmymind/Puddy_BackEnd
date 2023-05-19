@@ -51,7 +51,7 @@ public class PetServiceTest {
     @Mock
     private PetMapper petMapper;
 
-    @DisplayName("펫 추가 테스트")
+    @DisplayName("필수 정보로 펫 추가시 성공한다")
     @Test
     public void givenRequest_whenAddPet_thenOK() throws IOException {
         Long userId = 1L;
@@ -70,7 +70,7 @@ public class PetServiceTest {
         verify(petMapper, times(1)).toEntity(any(RequestPetDto.class));
     }
 
-    @DisplayName("펫 조회 테스트")
+    @DisplayName("유효한 유저 id로 펫 조회시 성공한다.")
     @Test
     public void givenUserId_whenGetPet_thenOK() {
         Long userId = 1L;
@@ -91,7 +91,7 @@ public class PetServiceTest {
         verify(userRepository, times(1)).findByIdWithPet(userId);
     }
 
-    @DisplayName("펫 수정 테스트")
+    @DisplayName("필수 정보로 펫 정보 업데이트시 성공한다")
     @Test
     public void givenUpdate_whenUpdatePet_thenOK() throws IOException {
         Long userId = 1L;

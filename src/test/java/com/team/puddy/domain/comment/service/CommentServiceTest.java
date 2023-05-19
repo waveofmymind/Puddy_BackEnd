@@ -44,7 +44,7 @@ public class CommentServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @DisplayName("댓글 추가 테스트")
+    @DisplayName("필수 정보로 댓글 작성시 성공한")
     @Test
     public void givenRequest_whenAddComment_thenOK() {
         Long articleId = 1L;
@@ -67,7 +67,7 @@ public class CommentServiceTest {
         verify(commentRepository, times(1)).save(any(Comment.class));
         verify(commentMapper, times(1)).toEntity(requestCommentDto, article, user);
     }
-    @DisplayName("댓글 삭제 테스트")
+    @DisplayName("유효한 댓글 id로 댓글을 삭제할 수 있다.")
     @Test
     public void givenCommentId_whenDeleteComment_thenOK() {
         Long articleId = 1L;
@@ -81,7 +81,7 @@ public class CommentServiceTest {
         verify(commentRepository, times(1)).existsByIdAndArticleIdAndUserId(commentId, articleId, userId);
         verify(commentRepository, times(1)).deleteById(commentId);
     }
-    @DisplayName("댓글 수정 테스트")
+    @DisplayName("필수 정보로 댓글을 수정할 수 있다.")
     @Test
     public void givenUpdate_whenUpdateComment_thenOK() {
         Long articleId = 1L;

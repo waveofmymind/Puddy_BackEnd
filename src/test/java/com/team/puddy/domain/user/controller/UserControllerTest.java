@@ -73,7 +73,7 @@ public class UserControllerTest extends ControllerTest {
                 .andExpect(jsonPath("$.data.refreshToken").value("Bearer sample-refresh-token"));
     }
 
-    @DisplayName("로그인시 아이디가 다를 경우 예외")
+    @DisplayName("로그인시 아이디가 다를 경우 예외가 발생한다.")
     @Test
     @WithMockUser
     void givenWrongAccount_whenLogin_then400() throws Exception {
@@ -94,7 +94,7 @@ public class UserControllerTest extends ControllerTest {
         verify(userService, times(1)).login(loginUserRequest);
     }
 
-    @DisplayName("로그인시 비밀번호가 틀린 경우 예외")
+    @DisplayName("로그인시 비밀번호가 틀린 경우 예외가 발생한다.")
     @Test
     @WithMockUser
     void givenWrongPassword_whenLogin_then() throws Exception {

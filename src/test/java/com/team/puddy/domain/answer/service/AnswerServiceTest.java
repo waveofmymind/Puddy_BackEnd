@@ -48,7 +48,7 @@ public class AnswerServiceTest {
     @Mock
     private AnswerMapper answerMapper;
 
-    @DisplayName("답변 추가 테스트")
+    @DisplayName("필수 정보로 답변글 작성시 성공한다")
     @Test
     public void givenRequest_whenAddAnswer_thenOK() {
         Long userId = 1L;
@@ -69,7 +69,7 @@ public class AnswerServiceTest {
         verify(answerMapper, times(1)).toEntity(requestAnswerDto, user, question);
         verify(answerRepository, times(1)).save(any(Answer.class));
     }
-    @DisplayName("답변 추가 실패 테스트(유저 없음)")
+    @DisplayName("유효하지 않은 유저가 답변글 작성시 예외가 발생한다.")
     @Test
     public void givenRequest_whenAddAnswer_then400() {
         Long userId = 1L;
@@ -84,7 +84,7 @@ public class AnswerServiceTest {
         verify(userRepository, times(1)).findById(userId);
     }
 
-    @DisplayName("답변 채택 테스트")
+    @DisplayName("유효한 게시글 id로 답변글 채택시 성공한다.")
     @Test
     public void givenAnswerId_whenSelectAnswer_thenOK() {
         Long userId = 1L;
@@ -102,7 +102,7 @@ public class AnswerServiceTest {
         verify(answerRepository, times(1)).select(answerId);
     }
 
-    @DisplayName("답변 수정 테스트")
+    @DisplayName("필수 정보로 답변글 수정시 성공한다")
     @Test
     public void givenUpdate_whenUpdateAnswer_thenOK() {
         Long userId = 1L;
@@ -121,7 +121,7 @@ public class AnswerServiceTest {
         assertEquals("수정 내용", answer.getContent());
     }
 
-    @DisplayName("답변 삭제 테스트")
+    @DisplayName("유효한 답변글 id로 게시글 삭제시 성공한다.")
     @Test
     public void givenAnswerId_whenDeleteAnswer_thenOK() {
         Long userId = 1L;

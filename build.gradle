@@ -2,8 +2,6 @@ buildscript {
     ext {
         queryDslVersion = "5.0.0"
         restdocsApiSpecVersion = '0.16.2'
-
-
     }
 }
 
@@ -92,6 +90,9 @@ dependencies {
 
     //email
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    //slack
+    implementation("net.gpedro.integrations.slack:slack-webhook:1.4.0")
 
 
     //S3

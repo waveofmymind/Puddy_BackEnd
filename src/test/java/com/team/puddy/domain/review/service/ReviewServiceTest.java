@@ -37,7 +37,7 @@ class ReviewServiceTest {
     @InjectMocks
     private ReviewService reviewService;
 
-    @DisplayName("리뷰 추가 테스트")
+    @DisplayName("필수 정보로 리뷰 작성시 성공한다")
     @Test
     public void givenRequest_whenAddReview_thenOK() {
 
@@ -54,7 +54,7 @@ class ReviewServiceTest {
         verify(reviewMapper).toEntity(requestReviewDto, expert);
         verify(reviewRepository).save(review);
     }
-    @DisplayName("리뷰 리스트 조회 테스트")
+    @DisplayName("유효한 전문가 id로 리뷰 리스트 조회시 성공한다")
     @Test
     public void givenExpertId_whenGetReviewListByExpertId_thenOK() {
         Long expertId = 1L;

@@ -64,7 +64,7 @@ public class UserServiceTest {
 
 
 
-    @DisplayName("로그인 시도시 성공 테스트")
+    @DisplayName("올바른 아이디와 비밀번호로 로그인시 성공한다.")
     @Test
     void givenRequest_whenLogin_thenOK() {
         //given
@@ -79,7 +79,7 @@ public class UserServiceTest {
         verify(passwordEncoder, times(1)).matches(eq(request.password()), eq(user.getPassword()));
     }
 
-    @DisplayName("로그인 시도시 존재하지 않는 계정일 경우 400 에러 발생 테스트")
+    @DisplayName("존재하지 않는 아이디로 로그인을 시도할 경우 400 예외가 발생한다.")
     @Test
     public void givenRequest_whenLogin_then400() {
         LoginUserRequest request = new LoginUserRequest("nonexistent", "password");
@@ -91,7 +91,7 @@ public class UserServiceTest {
         verify(userRepository, times(1)).findByAccount(eq(request.account()));
     }
 
-    @DisplayName("회원가입 성공 테스트")
+    @DisplayName("모든 요구 정보로 회원가입시 성공한다.")
     @Test
     public void givenRequest_whenJoin_thenOK() {
 
@@ -110,7 +110,7 @@ public class UserServiceTest {
         verify(userRepository, times(1)).save(any(User.class));
     }
 
-    @DisplayName("회원가입 실패 테스트 (중복 계정)")
+    @DisplayName("같은 아이디로 회원가입을 요청할 경우 예외가 발생한다.")
     @Test
     public void givenRequest_whenJoin_Duplicate() {
         // Given
@@ -129,7 +129,7 @@ public class UserServiceTest {
         verify(userRepository, never()).save(any(User.class));
     }
 
-    @DisplayName("토큰 재발급 성공 테스트")
+    @DisplayName("만료된 액세스 토큰으로 토큰 재발급 요청시 성공한다.")
     @Test
     public void givenRequest_whenReissueToken_thenOK() {
 
@@ -147,7 +147,7 @@ public class UserServiceTest {
         verify(userRepository).findByAccount(user.getAccount());
         verify(jwtTokenUtils).createLoginToken(user);
     }
-    @DisplayName("내 질문글 보기 성공 테스트")
+    @DisplayName("내 질문글 조회시 성공한다.")
     @Test
     public void givenRequestQuestion_whenGetPosts_thenOK() {
 
@@ -167,19 +167,19 @@ public class UserServiceTest {
 
     }
 
-    @DisplayName("권한 업데이트 성공 테스트")
+    @DisplayName("정상적인 토큰으로 전문가 권한 업데이트 요청시 성공한다.")
     @Test
     public void whenRequest_whenUpdateAuth_thenOK() {
 
         Long userId = 1L;
         User user = TestEntityUtils.user();
-        when(userRepository.findById(userId)).thenReturn(java.util.Optional.of(user));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         userService.updateAuth(userId);
 
         verify(userRepository).findById(userId);
     }
-    @DisplayName("이메일 중복 체크 성공 테스트")
+    @DisplayName("중복된 이메일을 입력할 경우 중복되었다는 성공을 응답한다.")
     @Test
     public void givenEmail_whenCheckEmail_thenOK() {
         when(userRepository.isExistsEmail(anyString())).thenReturn(false);
@@ -188,7 +188,7 @@ public class UserServiceTest {
 
         verify(userRepository).isExistsEmail("test@example.com");
     }
-    @DisplayName("아이디 중복 체크 성공 테스트")
+    @DisplayName("중복된 아이디를 입력할 경우 중복되었다는 성공을 응답한다.")
     @Test
     public void givenAccount_whenCheck_thenOK() {
         when(userRepository.isExistsAccount(anyString())).thenReturn(false);
@@ -197,7 +197,7 @@ public class UserServiceTest {
 
         verify(userRepository).isExistsAccount("test_account");
     }
-    @DisplayName("닉네임 중복 체크 성공 테스트")
+    @DisplayName("중복된 닉네임을 입력할 경우 중복되었다는 성공을 응답한다.")
     @Test
     public void givenNickname_whenCheck_thenOK() {
         when(userRepository.isExistsNickname(anyString())).thenReturn(false);
