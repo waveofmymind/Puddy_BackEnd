@@ -45,7 +45,8 @@
 
 ## API 명세서
 
-[API 명세서](https://documenter.getpostman.com/view/23164315/2s93RMVFEm#22ba6470-2481-40e0-a70f-dbf2b4361306)
+- Swagger : [스웨거 명세서](https://www.waveofmymind.site/swagger-ui/index.html#/)
+- 포스트맨: [API 명세서](https://documenter.getpostman.com/view/23164315/2s93RMVFEm#22ba6470-2481-40e0-a70f-dbf2b4361306)
 
 ## 단위 테스트 및 통합 테스트
 
