@@ -4,7 +4,7 @@
 
 ![image](https://user-images.githubusercontent.com/93868431/232716519-3f43848d-1f78-4c6d-a429-a759300fa31b.png)
 
-[PUDDY 서비스 바로가기](http://puddy.shop/) <br/>
+[PUDDY 서비스 바로가기](http://www.puddy.world/) <br/>
 > 현재 360*740에 최적화되어있습니다. (갤럭시S8+)
 
 # 퍼디는?
